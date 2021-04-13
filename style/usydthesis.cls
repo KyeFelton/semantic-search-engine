@@ -148,9 +148,9 @@
     \begingroup
     \LARGE\bfseries \centering
     \openup\medskipamount
-    \@title\par\vspace{30pt}%
+    \@title\par\vspace{30pt}
     \centering\mdseries{\sc \authors}\par\bigskip
-%    \centering\@sid{\sid}\par\bigskip
+    %\centering\@sid{\sid}\par\bigskip
     \centering{\large \mydegrees}\par\bigskip
     \endgroup
     \vfil

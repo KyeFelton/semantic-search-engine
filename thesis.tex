@@ -1,14 +1,14 @@
 % Configuration
 
-\def\degree{Doctor of Philosophy}
-\def\department{School of Civil Engineering \\ Faculty of Engineering}
-\def\mydegrees{B.Eng (Hons)}
+\def\degree{B.Eng (Hons)}
+\def\department{School of Electrical and Information Engineering \\ Faculty of Engineering}
+\def\mydegrees{}
 
-%\def\sid{200342291}
+%\def\sid{460376785}
 
-\def\supervisor{Main supervisor}
-\def\assocsupervisora{Other supervisor}
-%\def\assocsupervisorb{Optional third supervisor}
+\def\supervisor{Yash Shrivastava}
+\def\assocsupervisora{Joseph Davis}
+\def\assocsupervisorb{Masoud Salehpour}
 
 \documentclass[logo]{style/usydthesis}
 % Remove the optional 'logo' argument to remove the logo from the title page
@@ -39,8 +39,8 @@
 \usepackage[pdftex,bookmarks=true]{hyperref}
 %\usepackage[xindy]{glossaries} % must be after hyperref
 \hypersetup{
-    pdfauthor = {Name goes here},
-    pdftitle = {Title goes here},
+    pdfauthor = {Kye Felton},
+    pdftitle = {Creating and Testing a Semantic SearchEngine for the University of Sydney},
     colorlinks,
 %    linkcolor={blue},
 %    citecolor={blue}
@@ -88,8 +88,8 @@
 \renewcommand{\thepage}{\roman{page}}	
 %%%%%%%%%%%%
 % Title page
-\title{{\bf\Huge Your title goes here}}
-\author{Name goes here}
+\title{{\bf\Huge Creating and Testing a Semantic Search Engine for the University of Sydney}}
+\author{Kye Felton}
 
 \maketitle
 \setstretch{1.5}
@@ -102,9 +102,9 @@
 
 \setcounter{tocdepth}{2}
 \newpage
-\addcontentsline{toc}{chapter}{Contents}
+%\addcontentsline{toc}{chapter}{Contents}
 \tableofcontents
-\listoffigures
+%\listoffigures
 %\listoftables
 
 %%%%%%%%%%%%
@@ -127,11 +127,11 @@
 % End
 
 % Bibliography
-%\bibliographystyle{style/mybibstyle}
-%\bibliography{thesis}
+% \bibliographystyle{style/mybibstyle}
+% \bibliography{thesis}
 \printbibliography
 
 % Appendices
-\appendix
-\input{src/appendix.tex}
+% \appendix
+% \input{src/appendix.tex}
 \end{document}
