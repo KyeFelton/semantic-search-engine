@@ -8,3 +8,6 @@ import scrapy
 
 class JSONItem(scrapy.Item):
     json = scrapy.Field()
+
+class URLItem(scrapy.Item):
+    url = scrapy.Field()
