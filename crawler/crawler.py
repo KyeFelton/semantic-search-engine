@@ -14,7 +14,10 @@ def replace_pattern(old_pattern, new_pattern, text):
     modifier = re.compile(old_pattern)
     return re.sub(modifier, new_pattern, text)
 
+
 def clean_text(data):
+
+    # remove html tags and syntax from text
     if type(data) is str:
         data = replace_pattern('<\/p>|<\/h.>', '. ', data)
         data = replace_pattern('</li>', ', ', data)
@@ -25,13 +28,17 @@ def clean_text(data):
         data = replace_pattern('[\ |.|,]{3,}', '. ', data)
         data = replace_pattern('[( .,)]*:[( .,)]*', ': ', data)
         data = data.strip()
+
+    # traverse through dict to clean all text values
     elif type(data) is dict:
         for k, v in data.items():
             data[k] = clean_text(v)
     elif type(data) is list:
         for i in range(0, len(data)):
             data[i] = clean_text(data[i])
+            
     return data
+
 
 def merge_ids(data):
     merged = {}
