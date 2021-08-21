@@ -9,20 +9,22 @@ from scrapy.spiders import SitemapSpider, Rule
 # Add self.extract to each function to keep consistent
 # Stretch: a) differentiate between headings, text and lists b) add images
 
-class PageSpider(scrapy.Spider):
-    name = 'page'
+class PageSpider(SitemapSpider):
+    name = 'sitemap'
     allowed_domains = ['www.sydney.edu.au']
-    start_urls = ['https://www.sydney.edu.au/engineering/about.html']
-    
-    def parse(self, response):
-        with open('./scraped_data/sitemap.json') as json_file:
-            data = json.load(json_file)
-            for item in data:
-                yield scrapy.Request(item['url'], callback=self.parse_page)
+    sitemap_urls = ['http://www.sydney.edu.au/robots.txt']
+    sitemap_rules = [
+        ('/engineering/', 'parse'),
+    ]
+    custom_settings = {
+        "FEEDS": {
+            '../scraped_data/page_raw.json': {"format": "json"},
+        }
+    }
 
-    def parse_page(self, response):
+    def parse(self, response):
         page = {
-            'url': response.url,
+            'url': response.request.url,
             'category': self.extract(response, '//div[@class="contentType"]', True),
             'title': self.extract(response, '//h1[@class="pageTitle "]/div', True),
             'subtitle': self.extract(response, '//div[@class="pageStrapline"]/div', True),
@@ -126,11 +128,15 @@ class PeopleSpider(scrapy.Spider):
         'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.101 Safari/537.36',
         'x-requested-with': 'XMLHttpRequest',
     }
+    custom_settings = {
+        "FEEDS": {
+            '../scraped_data/people_raw.json': {"format": "json"},
+        }
+    }
 
     def parse(self, response):
         headers = self.headers
-        #types = [('academic-staff', '1'), ('research-student', '2')]
-        types = [('research-student', '2')]
+        types = [('academic-staff', '1'), ('research-student', '2')]
         for typ in types:
             headers['referer'] = 'https://www.sydney.edu.au/engineering/about/our-people/' + typ[0] + '.html'
             url = 'https://www.sydney.edu.au/AcademicProfiles/interfaces/rest/getMembersByCodeAndJobType/5000053030H0000/' + typ[1]
@@ -138,7 +144,6 @@ class PeopleSpider(scrapy.Spider):
             yield request
 
     def parse_person(self, response):
-        #categories = []
         categories = ['getHrPerson', 'getGrantDetails', 'getAuthorDetails']
         if (response.meta['type'] == 'academic-staff'):
             categories.append('getCollaborator')
@@ -156,18 +161,4 @@ class PeopleSpider(scrapy.Spider):
         data = {}
         data['id'] = response.meta['id']
         data[response.meta['category']] = json.loads(response.body)
-        yield data
-
-
-class SitemapSpider(SitemapSpider):
-    name = 'sitemap'
-    allowed_domains = ['www.sydney.edu.au']
-    sitemap_urls = ['http://www.sydney.edu.au/robots.txt']
-    sitemap_rules = [
-        ('/engineering/', 'parse'),
-    ]
-
-    def parse(self, response):
-        data = {}
-        data['url'] = response.request.url
         yield data
