@@ -3,62 +3,81 @@ import json
 import os
 import re
 import scrapy
+import sys
+import shutil
 from scrapy.crawler import CrawlerProcess
 
-from spiders import PeopleSpider, 
+from spiders import PageSpider, PeopleSpider
 
 
-def clean_text(text):
-    remover = re.compile(
-        '\\u00a0|\\n|\\t|<[^>]*>|\\ufffd[^\\ufffd]*\\ufffd|&laquo;[^\\&raquo;]*\\&raquo;')
-    text = re.sub(remover, '', text)
-    text = html.unescape(text)
-    apostrophe_replacer = re.compile('&#39;|&rsquo;|\u2019')
-    text = re.sub(apostrophe_replacer, "'", text)
-    return text
+def replace_pattern(old_pattern, new_pattern, text):
+    modifier = re.compile(old_pattern)
+    return re.sub(modifier, new_pattern, text)
 
-
-def clean_data(data):
+def clean_text(data):
     if type(data) is str:
-        data = clean_text(data)
+        data = replace_pattern('<\/p>|<\/h.>', '. ', data)
+        data = replace_pattern('</li>', ', ', data)
+        data = replace_pattern('\\u00a0|\\n|\\t|<[^>]*>|\\ufffd[^\\ufffd]*\\ufffd|&laquo;[^\\&raquo;]*\\&raquo;', ' ', data)
+        data = html.unescape(data)
+        data = replace_pattern('\ {2,}', ' ', data)
+        data = replace_pattern('[\ |,]{3,}', ', ', data)
+        data = replace_pattern('[\ |.|,]{3,}', '. ', data)
+        data = replace_pattern('[( .,)]*:[( .,)]*', ': ', data)
+        data = data.strip()
     elif type(data) is dict:
         for k, v in data.items():
-            data[k] = clean_data(v)
+            data[k] = clean_text(v)
     elif type(data) is list:
         for i in range(0, len(data)):
-            data[i] = clean_data(data[i])
+            data[i] = clean_text(data[i])
     return data
+
+def merge_ids(data):
+    merged = {}
+    for item in data:
+        if item['id'] in merged:
+            merged[item['id']].update(item)
+        else:
+            merged[item['id']] = item
+    return merged
+
+def clean_data(name, merge):
+
+    filename = '../scraped_data/' + name + '_raw.json'
+
+    # load the scraped data
+    with open(filename) as f:
+        data = json.loads(f.read())
+
+    # clean the data
+    if merge:
+        data = merge_ids(data)
+    data = clean_text(data)
+
+    # save the cleaned data
+    filename = '../scraped_data/' + name + '.json'
+    with open(filename, 'w') as f:
+        try:
+            f.write(json.dumps(list(data.values())))
+        except AttributeError as e:
+            f.write(json.dumps(list(data)))
 
 
 if __name__ == '__main__':
 
-    # remove old files
-    if os.path.exists("./scraped_data/people_raw.json"):
-        os.remove("./scraped_data/people_raw.json")
-    if os.path.exists("./scraped_data/people.json"):
-        os.remove("./scraped_data/people.json")
-
+    # remove old data
+    try:
+        shutil.rmtree('../scraped_data')
+    except OSError as e:
+        pass
+    
     # run spiders
-    process = CrawlerProcess(settings={
-        "FEEDS": {
-            "./scraped_data/people_raw.json": {"format": "json"},
-        }
-    })
+    process = CrawlerProcess()
+    process.crawl(PageSpider)
     process.crawl(PeopleSpider)
     process.start()
 
-    # clean data
-    with open('./scraped_data/people_raw.json') as f:
-        data = json.loads(f.read())
-
-    combined = {}
-    for item in data:
-        clean_data(item)
-        if item['id'] in combined:
-            combined[item['id']].update(item)
-        else:
-            combined[item['id']] = item
-
-    # save files
-    with open('./scraped_data/people.json', 'w') as f:
-            f.write(json.dumps(list(combined.values())))
+    # clean the data
+    clean_data('page', False)
+    clean_data('people', True)
