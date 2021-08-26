@@ -4,10 +4,10 @@
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@base <http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology-v2> .
+@base <http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology> .
 
-<http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology-v2> rdf:type owl:Ontology ;
-                                                                           rdfs:comment "This is an ontology about the University of Sydney"@en .
+<http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology> rdf:type owl:Ontology ;
+                                                                        rdfs:comment "This is an ontology about the University of Sydney"@en .
 
 #################################################################
 #    Object Properties
@@ -206,6 +206,13 @@
                       :Person .
 
 
+###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#primaryFacultyAffiliation
+:primaryFacultyAffiliation rdf:type owl:ObjectProperty ;
+                           rdfs:domain :Staff ,
+                                       :Student ;
+                           rdfs:range :EducationOrganisation .
+
+
 ###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#prohibittedCourse
 :prohibittedCourse rdf:type owl:ObjectProperty ;
                    rdfs:domain :Course ;
@@ -242,6 +249,13 @@
         rdfs:range :School .
 
 
+###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#supervisor
+:supervisor rdf:type owl:ObjectProperty ;
+            rdfs:domain owl:Thing ;
+            rdfs:range :Organisation ,
+                       :Person .
+
+
 ###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#tutor
 :tutor rdf:type owl:ObjectProperty ;
        rdfs:domain :Unit ;
@@ -256,22 +270,9 @@
                  rdfs:range :AcademicStaff .
 
 
-###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology-v2#supervisor
-:supervisor rdf:type owl:ObjectProperty ;
-            rdfs:domain owl:Thing ;
-            rdfs:range :Organisation ,
-                       :Person .
-
-
 #################################################################
 #    Data properties
 #################################################################
-
-###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#academicTitle
-:academicTitle rdf:type owl:DatatypeProperty ;
-               rdfs:domain :Person ;
-               rdfs:range xsd:string .
-
 
 ###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#address
 :address rdf:type owl:DatatypeProperty ;
@@ -294,11 +295,21 @@
               rdfs:range xsd:unsignedShort .
 
 
-###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#email
-:email rdf:type owl:DatatypeProperty ;
-       rdfs:domain :Organisation ,
-                   :Person ;
-       rdfs:range xsd:string .
+###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#date
+:date rdf:type owl:DatatypeProperty ;
+      rdfs:domain :Award ,
+                  :Event ,
+                  :Funding ,
+                  :Program ,
+                  :Publication ;
+      rdfs:range xsd:dateTime .
+
+
+###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#emailAddress
+:emailAddress rdf:type owl:DatatypeProperty ;
+              rdfs:domain :Organisation ,
+                          :Person ;
+              rdfs:range xsd:string .
 
 
 ###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#endDate
@@ -313,10 +324,17 @@
          rdfs:range xsd:dateTime .
 
 
-###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#firstName
-:firstName rdf:type owl:DatatypeProperty ;
-           rdfs:domain :Person ;
-           rdfs:range xsd:Name .
+###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#faxNumber
+:faxNumber rdf:type owl:DatatypeProperty ;
+           rdfs:domain :Organisation ,
+                       :Person ;
+           rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#fullName
+:fullName rdf:type owl:DatatypeProperty ;
+          rdfs:domain :Person ;
+          rdfs:range xsd:string .
 
 
 ###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#fundAmount
@@ -325,35 +343,62 @@
             rdfs:range xsd:double .
 
 
+###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#givenName
+:givenName rdf:type owl:DatatypeProperty ;
+           rdfs:domain :Person ;
+           rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#id
+:id rdf:type owl:DatatypeProperty ;
+    rdfs:domain owl:Thing ;
+    rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#jobTitle
+:jobTitle rdf:type owl:DatatypeProperty ;
+          rdfs:domain :Staff ,
+                      :Student ;
+          rdfs:range xsd:string .
+
+
 ###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#label
 :label rdf:type owl:DatatypeProperty ;
        rdfs:domain owl:Thing ;
        rdfs:range xsd:string .
 
 
-###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#lastName
-:lastName rdf:type owl:DatatypeProperty ;
-          rdfs:domain :Person ;
-          rdfs:range xsd:Name .
+###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#mobilePhoneNumber
+:mobilePhoneNumber rdf:type owl:DatatypeProperty ;
+                   rdfs:domain :Organisation ,
+                               :Person ;
+                   rdfs:range xsd:string .
 
 
-###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#middleName
-:middleName rdf:type owl:DatatypeProperty ;
-            rdfs:domain :Person ;
-            rdfs:range xsd:Name .
+###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#phoneNumber
+:phoneNumber rdf:type owl:DatatypeProperty ;
+             rdfs:domain :Organisation ,
+                         :Person ;
+             rdfs:range xsd:string .
 
 
-###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#phone
-:phone rdf:type owl:DatatypeProperty ;
-       rdfs:domain :Organisation ,
-                   :Person ;
-       rdfs:range xsd:string .
+###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#postalAddress
+:postalAddress rdf:type owl:DatatypeProperty ;
+               rdfs:domain :Organisation ,
+                           :Person ;
+               rdfs:range xsd:string .
 
 
 ###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#publicationTitle
 :publicationTitle rdf:type owl:DatatypeProperty ;
                   rdfs:domain :Publication ;
                   rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#salutation
+:salutation rdf:type owl:DatatypeProperty ;
+            rdfs:domain :Person ;
+            rdfs:range xsd:string .
 
 
 ###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#startDate
@@ -368,30 +413,19 @@
            rdfs:range xsd:dateTime .
 
 
+###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#surname
+:surname rdf:type owl:DatatypeProperty ;
+         rdfs:domain :Person ;
+         rdfs:range xsd:string .
+
+
 ###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#unitCode
 :unitCode rdf:type owl:DatatypeProperty ;
           rdfs:domain :Unit ;
           rdfs:range xsd:string .
 
 
-###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology-v2#date
-:date rdf:type owl:DatatypeProperty ;
-      rdfs:domain :Award ,
-                  :Event ,
-                  :Funding ,
-                  :Program ,
-                  :Publication ;
-      rdfs:range xsd:dateTime .
-
-
-###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology-v2#fax
-:fax rdf:type owl:DatatypeProperty ;
-     rdfs:domain :Organisation ,
-                 :Place ;
-     rdfs:range xsd:string .
-
-
-###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology-v2#website
+###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#website
 :website rdf:type owl:DatatypeProperty ;
          rdfs:domain owl:Thing ;
          rdfs:range xsd:string .
@@ -760,8 +794,7 @@
 
 
 ###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#Organisation
-:Organisation rdf:type owl:Class ;
-              rdfs:comment "Reference: https://www.sydney.edu.au/policies/showdoc.aspx?recnum=PDOC2016/430&RendNum=0"@en .
+:Organisation rdf:type owl:Class .
 
 
 ###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#Outlet
