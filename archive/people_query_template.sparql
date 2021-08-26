@@ -1,0 +1,27 @@
+prefix jarql: <http://jarql.com/>
+prefix ont: <http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology-v2>
+
+CONSTRUCT {
+    ?Student0 a ont:Student ;
+        # ont:id ?id ;
+        ont:name ?fullName ;
+        ont:givenName ?givenName ;
+        ont:surname ?surname ;
+        ont:salutation ?salutation ;
+        ont:emailAddress ?email ;
+        ont:mobile ?mobilePhoneNumber ;
+        ont:phone ?phoneNumber ; 
+        ont:fax ?faxNumber .
+
+} WHERE {
+    jarql:root jarql:id ?Student0 .
+    ?Student0 jarql:getHrPerson ?getHrPerson .
+    ?getHrPerson jarql:fullName ?fullName .
+    ?getHrPerson jarql:givenName ?givenName .
+    ?getHrPerson jarql:surname ?surname .
+    OPTIONAL { ?getHrPerson jarql:salutation ?salutation . }
+    OPTIONAL { ?getHrPerson jarql:emailAddress ?emailAddress . }
+    OPTIONAL { ?getHrPerson jarql:mobilePhoneNumber ?mobilePhoneNumber . }
+    OPTIONAL { ?getHrPerson jarql:phoneNumber ?phoneNumber . }
+    OPTIONAL { ?getHrPerson jarql:faxNumber ?faxNumber . }
+}
