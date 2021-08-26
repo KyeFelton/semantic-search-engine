@@ -17,26 +17,27 @@ def replace_pattern(old_pattern, new_pattern, text):
 
 def clean_text(data):
 
-    # remove html tags and syntax from text
-    if type(data) is str:
-        data = replace_pattern('<\/p>|<\/h.>', '. ', data)
-        data = replace_pattern('</li>', ', ', data)
-        data = replace_pattern('\\u00a0|\\n|\\t|<[^>]*>|\\ufffd[^\\ufffd]*\\ufffd|&laquo;[^\\&raquo;]*\\&raquo;', ' ', data)
-        data = html.unescape(data)
-        data = replace_pattern('\ {2,}', ' ', data)
-        data = replace_pattern('[\ |,]{3,}', ', ', data)
-        data = replace_pattern('[\ |.|,]{3,}', '. ', data)
-        data = replace_pattern('[( .,)]*:[( .,)]*', ': ', data)
-        data = data.strip()
-
-    # traverse through dict to clean all text values
-    elif type(data) is dict:
+    # recursively traverse through dict/list to clean all text values
+    if type(data) is dict:
         for k, v in data.items():
             data[k] = clean_text(v)
     elif type(data) is list:
         for i in range(0, len(data)):
             data[i] = clean_text(data[i])
-            
+
+    # remove html syntax and correct sentence structure
+    elif type(data) is str:
+        data = replace_pattern('<\/p>|<\/h.>', '. ', data) # transform end of paragraphs and headings to fullstop
+        data = replace_pattern('</li>', ', ', data) # transform end of lists to commas
+        data = replace_pattern('\\u00a0|\\n|\\t|<[^>]*>|\\ufffd[^\\ufffd]*\\ufffd|&laquo;[^\\&raquo;]*\\&raquo;', ' ', data) # remove html tags
+        data = html.unescape(data) # remove special html characters
+        data = replace_pattern('\ {2,}', ' ', data) # remove 2+ spaces
+        data = replace_pattern('[\ |,]{3,}', ', ', data) # correct inconsistent comma placement
+        data = replace_pattern('[\ |.|,]{3,}', '. ', data) # correct inconsistent fullstop placement
+        data = replace_pattern('[( .,)]*:[( .,)]*', ': ', data) # correct inconsistent colon placement
+        data = replace_pattern('[( .,)]*;[( .,)]*', '; ', data) # correct inconsistent semicolon placement
+        data = data.strip()
+
     return data
 
 
@@ -48,6 +49,7 @@ def merge_ids(data):
         else:
             merged[item['id']] = item
     return merged
+
 
 def clean_data(name, merge):
 
