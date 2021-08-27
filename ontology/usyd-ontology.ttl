@@ -206,13 +206,6 @@
                       :Person .
 
 
-###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#primaryFacultyAffiliation
-:primaryFacultyAffiliation rdf:type owl:ObjectProperty ;
-                           rdfs:domain :Staff ,
-                                       :Student ;
-                           rdfs:range :EducationOrganisation .
-
-
 ###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#prohibittedCourse
 :prohibittedCourse rdf:type owl:ObjectProperty ;
                    rdfs:domain :Course ;
@@ -270,15 +263,40 @@
                  rdfs:range :AcademicStaff .
 
 
+###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology#affiliation
+:affiliation rdf:type owl:ObjectProperty ;
+             rdfs:domain :Person ;
+             rdfs:range :Organisation .
+
+
+###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology#collaboration
+:collaboration rdf:type owl:ObjectProperty ;
+               rdfs:domain :AcademicStaff ;
+               rdfs:range :Collaboration .
+
+
+###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology#committee
+:committee rdf:type owl:ObjectProperty ;
+           rdfs:domain :Organisation ;
+           rdfs:range :Committee .
+
+
+###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology#institute
+:institute rdf:type owl:ObjectProperty ;
+           rdfs:domain :EducationOrganisation ,
+                       :Faculty ,
+                       :School ;
+           rdfs:range :Institute .
+
+
+###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology#primaryAffiliation
+:primaryAffiliation rdf:type owl:ObjectProperty ;
+                    rdfs:subPropertyOf :affiliation .
+
+
 #################################################################
 #    Data properties
 #################################################################
-
-###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#address
-:address rdf:type owl:DatatypeProperty ;
-         rdfs:domain :Place ;
-         rdfs:range xsd:string .
-
 
 ###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#cost
 :cost rdf:type owl:DatatypeProperty ;
@@ -431,6 +449,135 @@
          rdfs:range xsd:string .
 
 
+###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology#bookEditors
+:bookEditors rdf:type owl:DatatypeProperty ;
+             rdfs:domain :Book ;
+             rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology#citations
+:citations rdf:type owl:DatatypeProperty ;
+           rdfs:domain :Publication ;
+           rdfs:range xsd:integer .
+
+
+###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology#conferenceLocation
+:conferenceLocation rdf:type owl:DatatypeProperty ;
+                    rdfs:domain :ConferencePaper ;
+                    rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology#conferenceYear
+:conferenceYear rdf:type owl:DatatypeProperty ;
+                rdfs:domain :ConferencePaper ;
+                rdfs:range xsd:integer .
+
+
+###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology#country
+:country rdf:type owl:DatatypeProperty ;
+         rdfs:domain :Collaboration ;
+         rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology#dateRecorded
+:dateRecorded rdf:type owl:DatatypeProperty ;
+              rdfs:domain :Grant ;
+              rdfs:range xsd:dateTime .
+
+
+###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology#description
+:description rdf:type owl:DatatypeProperty ;
+             rdfs:domain owl:Thing ;
+             rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology#doi
+:doi rdf:type owl:DatatypeProperty ;
+     rdfs:domain :Publication ;
+     rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology#endPage
+:endPage rdf:type owl:DatatypeProperty ;
+         rdfs:domain :Publication ;
+         rdfs:range xsd:integer .
+
+
+###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology#issue
+:issue rdf:type owl:DatatypeProperty ;
+       rdfs:domain :JournalArticle ;
+       rdfs:range xsd:integer .
+
+
+###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology#parentTitle
+:parentTitle rdf:type owl:DatatypeProperty ;
+             rdfs:domain :Publication ;
+             rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology#patentNumber
+:patentNumber rdf:type owl:DatatypeProperty ;
+              rdfs:domain :Publication ;
+              rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology#postNom
+:postNom rdf:type owl:DatatypeProperty ;
+         rdfs:domain :Person ;
+         rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology#postalAddress
+:postalAddress rdf:type owl:DatatypeProperty ;
+               rdfs:domain :Building ,
+                           :Facility ,
+                           :Organisation ,
+                           :Person ;
+               rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology#publicationDate
+:publicationDate rdf:type owl:DatatypeProperty ;
+                 rdfs:domain :Publication ;
+                 rdfs:range xsd:dateTime .
+
+
+###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology#publisherName
+:publisherName rdf:type owl:DatatypeProperty ;
+               rdfs:domain :Publication ;
+               rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology#publisherPlace
+:publisherPlace rdf:type owl:DatatypeProperty ;
+                rdfs:domain :Publication ;
+                rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology#relationship
+:relationship rdf:type owl:DatatypeProperty ;
+              rdfs:domain :Collaboration ;
+              rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology#startPage
+:startPage rdf:type owl:DatatypeProperty ;
+           rdfs:domain :Publication ;
+           rdfs:range xsd:integer .
+
+
+###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology#thesisDegree
+:thesisDegree rdf:type owl:DatatypeProperty ;
+              rdfs:domain :Thesis ;
+              rdfs:range xsd:string .
+
+
+###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology#volume
+:volume rdf:type owl:DatatypeProperty ;
+        rdfs:domain :JournalArticle ;
+        rdfs:range xsd:integer .
+
+
 #################################################################
 #    Classes
 #################################################################
@@ -449,11 +596,6 @@
 :Alumnus rdf:type owl:Class ;
          rdfs:subClassOf :Person ;
          owl:disjointWith :Student .
-
-
-###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#Article
-:Article rdf:type owl:Class ;
-         rdfs:subClassOf :Publication .
 
 
 ###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#Assistant
@@ -482,7 +624,7 @@
 
 ###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#BookArticle
 :BookArticle rdf:type owl:Class ;
-             rdfs:subClassOf :Article .
+             rdfs:subClassOf :Publication .
 
 
 ###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#Building
@@ -533,7 +675,7 @@
 
 ###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#ConferencePaper
 :ConferencePaper rdf:type owl:Class ;
-                 rdfs:subClassOf :Article .
+                 rdfs:subClassOf :Publication .
 
 
 ###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#Conservatorium
@@ -574,11 +716,6 @@
 ###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#Diploma
 :Diploma rdf:type owl:Class ;
          rdfs:subClassOf :Course .
-
-
-###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#DoctoralThesis
-:DoctoralThesis rdf:type owl:Class ;
-                rdfs:subClassOf :Thesis .
 
 
 ###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#Doctorate
@@ -693,11 +830,6 @@
                rdfs:subClassOf :BachelorDegree .
 
 
-###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#HonoursThesis
-:HonoursThesis rdf:type owl:Class ;
-               rdfs:subClassOf :Thesis .
-
-
 ###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#Hospital
 :Hospital rdf:type owl:Class ;
           rdfs:subClassOf :MedicalCentre .
@@ -708,14 +840,9 @@
            rdfs:subClassOf :EducationOrganisation .
 
 
-###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#Journal
-:Journal rdf:type owl:Class ;
-         rdfs:subClassOf :Periodical .
-
-
 ###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#JournalArticle
 :JournalArticle rdf:type owl:Class ;
-                rdfs:subClassOf :Article .
+                rdfs:subClassOf :Publication .
 
 
 ###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#Laboratory
@@ -743,19 +870,14 @@
          rdfs:subClassOf :EducationFacility .
 
 
-###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#Magazine
-:Magazine rdf:type owl:Class ;
-          rdfs:subClassOf :Periodical .
+###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#MagazineArticle
+:MagazineArticle rdf:type owl:Class ;
+                 rdfs:subClassOf :Publication .
 
 
 ###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#MastersDegree
 :MastersDegree rdf:type owl:Class ;
                rdfs:subClassOf :Course .
-
-
-###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#MastersThesis
-:MastersThesis rdf:type owl:Class ;
-               rdfs:subClassOf :Thesis .
 
 
 ###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#MedicalCentre
@@ -775,7 +897,7 @@
 
 ###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#NewsArticle
 :NewsArticle rdf:type owl:Class ;
-             rdfs:subClassOf :Article .
+             rdfs:subClassOf :Publication .
 
 
 ###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#NonDegree
@@ -790,7 +912,7 @@
 
 ###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#OpinionArticle
 :OpinionArticle rdf:type owl:Class ;
-                rdfs:subClassOf :Article .
+                rdfs:subClassOf :Publication .
 
 
 ###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#Organisation
@@ -822,11 +944,6 @@
              rdfs:subClassOf :Event .
 
 
-###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#Periodical
-:Periodical rdf:type owl:Class ;
-            rdfs:subClassOf :Publication .
-
-
 ###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#Person
 :Person rdf:type owl:Class .
 
@@ -837,7 +954,7 @@
 
 ###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#Podcast
 :Podcast rdf:type owl:Class ;
-         rdfs:subClassOf :Periodical .
+         rdfs:subClassOf :Publication .
 
 
 ###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#Policy
@@ -996,7 +1113,12 @@
 
 ###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/university-of-sydney#WorkshopPaper
 :WorkshopPaper rdf:type owl:Class ;
-               rdfs:subClassOf :Article .
+               rdfs:subClassOf :Publication .
+
+
+###  http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology#Collaboration
+:Collaboration rdf:type owl:Class ;
+               rdfs:subClassOf :Engagement .
 
 
 #################################################################
