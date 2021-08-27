@@ -1,0 +1,362 @@
+[
+    {
+        "@context": [
+            "http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology-v2"
+        ],
+        "@type": "Student",
+        "id": "yingbin.bai.633",
+        "fullName": "Yingbin Bai",
+        "givenName": "Yingbin",
+        "surname": "Bai",
+        "salutation": "Mr",
+        "jobTitle": null,
+        "primaryFacultyAffiliation": "Faculty of Engineering > School of Computer Science > Computer Science",
+        "emailAddress": "ybai6430@uni.sydney.edu.au",
+        "postalAddress": null,
+        "phoneNumber": null,
+        "faxNumber": null,
+        "mobilePhoneNumber": null
+    },
+    {
+        "@context": [
+            "http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology-v2"
+        ],
+        "@type": "Student",
+        "id": "michael.arnold.678",
+        "fullName": "Michael Arnold",
+        "givenName": "Michael",
+        "surname": "Arnold",
+        "salutation": "Mr",
+        "jobTitle": null,
+        "primaryFacultyAffiliation": "Faculty of Engineering > Civil Engineering > Civil Engineering",
+        "emailAddress": "marn7036@uni.sydney.edu.au",
+        "postalAddress": null,
+        "phoneNumber": null,
+        "faxNumber": null,
+        "mobilePhoneNumber": null
+    },
+    {
+        "@context": [
+            "http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology-v2"
+        ],
+        "@type": "Student",
+        "id": "arash.araghi.565",
+        "fullName": "Arash Araghi",
+        "givenName": "Arash",
+        "surname": "Araghi",
+        "salutation": "Mr",
+        "jobTitle": null,
+        "primaryFacultyAffiliation": "Faculty of Engineering > Chemical and Biomolecular Engineering > Chemical & Biomolecular Engineering",
+        "emailAddress": "hara9034@uni.sydney.edu.au",
+        "postalAddress": null,
+        "phoneNumber": null,
+        "faxNumber": null,
+        "mobilePhoneNumber": null
+    },
+    {
+        "@context": [
+            "http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology-v2"
+        ],
+        "@type": "Student",
+        "id": "athiya.azeem.796",
+        "fullName": "Athiya Azeem",
+        "givenName": "Athiya",
+        "surname": "Azeem",
+        "salutation": "Miss",
+        "jobTitle": null,
+        "primaryFacultyAffiliation": "Faculty of Engineering > Aerospace, Mechanical & Mechatronic Engineering",
+        "emailAddress": "aaze2193@uni.sydney.edu.au",
+        "postalAddress": null,
+        "phoneNumber": null,
+        "faxNumber": null,
+        "mobilePhoneNumber": null
+    },
+    {
+        "@context": [
+            "http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology-v2"
+        ],
+        "@type": "Student",
+        "id": "james.allworth.362",
+        "fullName": "James Allworth",
+        "givenName": "James",
+        "surname": "Allworth",
+        "salutation": "Mr",
+        "jobTitle": null,
+        "primaryFacultyAffiliation": "Faculty of Engineering > Aerospace, Mechanical & Mechatronic Engineering > Australian Centre for Field Robotics",
+        "emailAddress": "jall8741@uni.sydney.edu.au",
+        "postalAddress": null,
+        "phoneNumber": null,
+        "faxNumber": null,
+        "mobilePhoneNumber": null
+    },
+    {
+        "@context": [
+            "http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology-v2"
+        ],
+        "@type": "AcademicStaff",
+        "id": "michel.chaaya",
+        "fullName": "Michel Chaaya",
+        "givenName": "Michel",
+        "surname": "Chaaya",
+        "salutation": "Dr",
+        "jobTitle": null,
+        "primaryFacultyAffiliation": "Faculty of Engineering > Civil Engineering > Civil Engineering",
+        "emailAddress": "michel.chaaya@sydney.edu.au",
+        "postalAddress": null,
+        "phoneNumber": "+61 2 9036 6384",
+        "faxNumber": "+61 2 9351 3343",
+        "mobilePhoneNumber": null
+    },
+    {
+        "@context": [
+            "http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology-v2"
+        ],
+        "@type": "AcademicStaff",
+        "id": "marshall.dalton",
+        "fullName": "Marshall Dalton",
+        "givenName": "Marshall",
+        "surname": "Dalton",
+        "salutation": "Dr",
+        "jobTitle": "Research Fellow; School of Biomedical Engineering",
+        "primaryFacultyAffiliation": "Faculty of Engineering > School of Biomedical Engineering > Biomedical Engineering",
+        "emailAddress": "marshall.dalton@sydney.edu.au",
+        "postalAddress": null,
+        "phoneNumber": null,
+        "faxNumber": null,
+        "mobilePhoneNumber": null
+    },
+    {
+        "@context": [
+            "http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology-v2"
+        ],
+        "@type": "Student",
+        "id": "claudio.diazcifuentes.612",
+        "fullName": "Claudio Diaz Cifuentes",
+        "givenName": "Claudio",
+        "surname": "Diaz Cifuentes",
+        "salutation": "Mr",
+        "jobTitle": null,
+        "primaryFacultyAffiliation": "Faculty of Engineering > School of Computer Science > Computer Science",
+        "emailAddress": "cdia0348@uni.sydney.edu.au",
+        "postalAddress": null,
+        "phoneNumber": null,
+        "faxNumber": null,
+        "mobilePhoneNumber": null
+    },
+    {
+        "@context": [
+            "http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology-v2"
+        ],
+        "@type": "AcademicStaff",
+        "id": "adrian.ball.766",
+        "fullName": "Adrian Ball",
+        "givenName": "Adrian",
+        "surname": "Ball",
+        "salutation": "Dr",
+        "jobTitle": "Research Associate; Rio Tinto Centre for Mine Automation; Australian Centre for Field Robotics",
+        "primaryFacultyAffiliation": "Faculty of Engineering > Aerospace, Mechanical & Mechatronic Engineering > Australian Centre for Field Robotics",
+        "emailAddress": null,
+        "postalAddress": null,
+        "phoneNumber": "+61 2 9351 3040",
+        "faxNumber": null,
+        "mobilePhoneNumber": null
+    },
+    {
+        "@context": [
+            "http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology-v2"
+        ],
+        "@type": "AcademicStaff",
+        "id": "ali.hadigheh",
+        "fullName": "Ali Hadigheh",
+        "givenName": "Ali",
+        "surname": "Hadigheh",
+        "salutation": "Dr",
+        "jobTitle": "Lecturer; ARC DECRA Fellow; School of Civil Engineering; Member of Centre for Advanced Structural Engineering;",
+        "primaryFacultyAffiliation": "Faculty of Engineering > Civil Engineering > Civil Engineering",
+        "emailAddress": "ali.hadigheh@sydney.edu.au",
+        "postalAddress": null,
+        "phoneNumber": "+61 2 8627 0067",
+        "faxNumber": null,
+        "mobilePhoneNumber": null
+    },
+    {
+        "@context": [
+            "http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology-v2"
+        ],
+        "@type": "AcademicStaff",
+        "id": "nicholas.james",
+        "fullName": "Nicholas James",
+        "givenName": "Nicholas",
+        "surname": "James",
+        "salutation": "Mr",
+        "jobTitle": "Associate Lecturer",
+        "primaryFacultyAffiliation": "Faculty of Engineering > School of Computer Science > Computer Science",
+        "emailAddress": "nicholas.james@sydney.edu.au",
+        "postalAddress": null,
+        "phoneNumber": null,
+        "faxNumber": null,
+        "mobilePhoneNumber": null
+    },
+    {
+        "@context": [
+            "http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology-v2"
+        ],
+        "@type": "AcademicStaff",
+        "id": "kenny.kwok",
+        "fullName": "Kenny Kwok",
+        "givenName": "Kenny",
+        "surname": "Kwok",
+        "salutation": "Professor",
+        "jobTitle": "Professor Emeritus; School of Civil Engineering",
+        "primaryFacultyAffiliation": "Faculty of Engineering > Civil Engineering > Civil Engineering",
+        "emailAddress": "kenny.kwok@sydney.edu.au",
+        "postalAddress": null,
+        "phoneNumber": "+61 2 8627 5682",
+        "faxNumber": null,
+        "mobilePhoneNumber": null
+    },
+    {
+        "@context": [
+            "http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology-v2"
+        ],
+        "@type": "AcademicStaff",
+        "id": "bob.kummerfeld",
+        "fullName": "Bob Kummerfeld",
+        "givenName": "Bob",
+        "surname": "Kummerfeld",
+        "salutation": "Associate Professor",
+        "jobTitle": "School of Computer Science",
+        "primaryFacultyAffiliation": "Faculty of Engineering > School of Computer Science > Computer Science",
+        "emailAddress": "bob.kummerfeld@sydney.edu.au",
+        "postalAddress": null,
+        "phoneNumber": "+61 2 9351 4777",
+        "faxNumber": "+61 2 9351 3838",
+        "mobilePhoneNumber": null
+    },
+    {
+        "@context": [
+            "http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology-v2"
+        ],
+        "@type": "AcademicStaff",
+        "id": "liu.liu1",
+        "fullName": "Liu Liu",
+        "givenName": "Liu",
+        "surname": "Liu",
+        "salutation": "Ms",
+        "jobTitle": "Research Associate; School of Computer Science",
+        "primaryFacultyAffiliation": "Faculty of Engineering > School of Computer Science > Computer Science",
+        "emailAddress": "liu.liu1@sydney.edu.au",
+        "postalAddress": null,
+        "phoneNumber": null,
+        "faxNumber": null,
+        "mobilePhoneNumber": null
+    },
+    {
+        "@context": [
+            "http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology-v2"
+        ],
+        "@type": "AcademicStaff",
+        "id": "benjy.marks",
+        "fullName": "Benjy Marks",
+        "givenName": "Benjy",
+        "surname": "Marks",
+        "salutation": "Dr",
+        "jobTitle": "Lecturer in Geomechanics; School of Civil Engineering; Dalyell Coordinator (Engineering)",
+        "primaryFacultyAffiliation": "Faculty of Engineering > Civil Engineering > Civil Engineering",
+        "emailAddress": "benjy.marks@sydney.edu.au",
+        "postalAddress": null,
+        "phoneNumber": "+61 2 9351 4383",
+        "faxNumber": null,
+        "mobilePhoneNumber": null
+    },
+    {
+        "@context": [
+            "http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology-v2"
+        ],
+        "@type": "AcademicStaff",
+        "id": "david.martinezmartin",
+        "fullName": "David Martinez Martin",
+        "givenName": "David",
+        "surname": "Martinez Martin",
+        "salutation": "Dr",
+        "jobTitle": "PhD (Autonomous University of Madrid);BSc/MSc (University of Valladolid (Spain));;Senior Lecturer in Biomedical Engineering",
+        "primaryFacultyAffiliation": "Faculty of Engineering > School of Biomedical Engineering > Biomedical Engineering",
+        "emailAddress": "david.martinezmartin@sydney.edu.au",
+        "postalAddress": null,
+        "phoneNumber": "+61 2 9351 5973",
+        "faxNumber": null,
+        "mobilePhoneNumber": null
+    },
+    {
+        "@context": [
+            "http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology-v2"
+        ],
+        "@type": "AcademicStaff",
+        "id": "jianlei.niu",
+        "fullName": "Jianlei Niu",
+        "givenName": "Jianlei",
+        "surname": "Niu",
+        "salutation": "Professor",
+        "jobTitle": "Professor of Building, Environment and Energy",
+        "primaryFacultyAffiliation": "Faculty of Engineering > Civil Engineering > Civil Engineering",
+        "emailAddress": "jianlei.niu@sydney.edu.au",
+        "postalAddress": null,
+        "phoneNumber": null,
+        "faxNumber": null,
+        "mobilePhoneNumber": null
+    },
+    {
+        "@context": [
+            "http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology-v2"
+        ],
+        "@type": "AcademicStaff",
+        "id": "mikhail.prokopenko",
+        "fullName": "Mikhail Prokopenko",
+        "givenName": "Mikhail",
+        "surname": "Prokopenko",
+        "salutation": "Professor",
+        "jobTitle": "Director, Complex Systems Research Group; School of Civil Engineering;Director, inter-faculty Centre for Complex Systems",
+        "primaryFacultyAffiliation": "Faculty of Engineering > Civil Engineering > Civil Engineering",
+        "emailAddress": "mikhail.prokopenko@sydney.edu.au",
+        "postalAddress": null,
+        "phoneNumber": "+61 2 9351 7569",
+        "faxNumber": null,
+        "mobilePhoneNumber": null
+    },
+    {
+        "@context": [
+            "http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology-v2"
+        ],
+        "@type": "AcademicStaff",
+        "id": "gwenaelle.proust",
+        "fullName": "Gwenaelle Proust",
+        "givenName": "Gwenaelle",
+        "surname": "Proust",
+        "salutation": "Associate Professor",
+        "jobTitle": "; Associate Professor, School of Civil EngineeringDeputy Director, Sydney Manufacturing Hub",
+        "primaryFacultyAffiliation": "Faculty of Engineering > Civil Engineering > Civil Engineering",
+        "emailAddress": "gwenaelle.proust@sydney.edu.au",
+        "postalAddress": null,
+        "phoneNumber": "+61 2 9036 5498",
+        "faxNumber": "+61 2 9351 3343",
+        "mobilePhoneNumber": null
+    },
+    {
+        "@context": [
+            "http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology-v2"
+        ],
+        "@type": "AcademicStaff",
+        "id": "konstantin.seiler",
+        "fullName": "Konstantin Seiler",
+        "givenName": "Konstantin",
+        "surname": "Seiler",
+        "salutation": "Dr",
+        "jobTitle": "Research Fellow; Rio Tinto Centre for Mine Automation; Australian Centre for Field Robotics",
+        "primaryFacultyAffiliation": "Faculty of Engineering > Aerospace, Mechanical & Mechatronic Engineering > Australian Centre for Field Robotics",
+        "emailAddress": "konstantin.seiler@sydney.edu.au",
+        "postalAddress": null,
+        "phoneNumber": "+61 2 9351 4290",
+        "faxNumber": null,
+        "mobilePhoneNumber": null
+    }
+]

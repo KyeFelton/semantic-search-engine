@@ -1,20 +1,9 @@
 import json
 
-CONTEXT = 'http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology-v2',
+CONTEXT = 'http://www.semanticweb.org/kyefelton/ontologies/2021/4/usyd-ontology',
 
-hr_details = [
-    'fullName',
-    'givenName',
-    'surname',
-    'salutation',
-    'jobTitle',
-    'primaryFacultyAffiliation',
-    'emailAddress',
-    'postalAddress',
-    'phoneNumber',
-    'faxNumber',
-    'mobilePhoneNumber'
-]
+def entity(type, label):
+
 
 def copy_elements(json, keys):
     new_json = {}
@@ -22,6 +11,49 @@ def copy_elements(json, keys):
         new_json[key] = json[key]
     return new_json
 
+def get_hr_details(person):
+    details = {}
+    keys = [
+        'fullName',
+        'givenName',
+        'surname',
+        'salutation',
+        'jobTitle',
+        'emailAddress',
+        'postalAddress',
+        'phoneNumber',
+        'faxNumber',
+        'mobilePhoneNumber'
+    ]
+    details.update(copy_elements(person, keys))
+    return details
+
+
+
+def get_affiliations(person):
+    primary_aff = {}
+    primary_aff_str = person['primaryFacultyAffiliation']
+    primary_aff_list = primary_aff_str.split(' > ')
+    faculty = {
+        '@type': 'Faculty',
+        'name': primary_aff_list[0],
+        'school': primary_aff_list[1]
+    }
+    school = {
+        '@type': 'School',
+        'name': primary_aff_list[1]
+    }
+    if primary_aff_list[1] != primary_aff_list[2]:
+        institute = {
+            '@type': 'Institute',
+            'name': primary_aff_list[2]
+        }
+        school['institute'] = primary_aff_list[2]
+        primary_aff = institute
+    else:
+        primary_aff = school
+
+    return primary_aff
 
 if __name__ == '__main__':
 
@@ -31,18 +63,27 @@ if __name__ == '__main__':
     jsonld = []
     
     for element in data:
+        
         person = {}
         person['@context'] = CONTEXT
-        if element.contains('getThesisList'):
+        if 'getThesisList' in element:
             person['@type'] = 'Student'
-        elif element.contains('getCollaborator'):
+        elif 'getCollaborator' in element:
             person['@type'] = 'AcademicStaff'
         else:
             person['@type'] = 'Person'
-        person['id'] = person['id'] 
-        person.update(copy_elements(person['getHrPerson'], hr_details))
-        
-        print(person)
+
+        person['id'] = element['id'] 
+        person.update(get_hr_details(element['getHrPerson']))
+
+        person['primaryAffilitation'] = get_affiliations(element['primaryFacultyAffilition'])
+        person['affiliation'] = []
+        for other_aff in person['affiliationList']:
+            person['affiliation'].append(get_affiliations(other_aff))        
+        jsonld.append(person)
+    
+    with open('./jsonld.json', 'w') as f:
+        f.write(json.dumps(jsonld))
         
         
         

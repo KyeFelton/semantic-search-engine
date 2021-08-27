@@ -1,0 +1,34 @@
+## Identify all the entities within the person data. Make a function for the creation of each entity ##
+## Figure out how to id entities (to avoid the creation of duplicates) ##
+
+root: Student / AcademicStaff
+getHrPerson -> affiliationList: [ Faculty, School, Institute, ... ]
+getHrPerson -> building: Building
+getHrPerson -> hrJobList: Job
+getThesisList: [ Thesis, ... ] 
+getThesisList -> supervisors: [ AcademicStaff, ... ]
+getAuthorDetails -> researchPublications: [ Publications, ... ]
+getAuthorDetails -> researchPublications -> authors: [ People, ... ]
+getGrantDetails -> grants: [ Grant, ... ]
+getCollaborator -> collaborations: [ ResearchCollaboration, Institute, ExternalAssociate, ... ]
+
+
+Collaborations:
+"country_id": "39366",
+"countryTitle": "Germany",
+"institution": "University of Erlangen-Nuremberg",
+"relationshipdetails": "Prof. Robert Schober, Institute of Digital Communications",
+"comments": ""
+
+Grants:
+"grantCode": null,
+"title": "Security and Privacy Architecture for the Internet-of-Things",
+"type": "DVC Research/Robinson Fellowship",
+"totalAmount": "",
+"dateCommenced": 1577797200000,
+"duration": "4",
+"dateRecorded": null,
+"endDate": 1703941200000,
+"authorsString": "Yeoh P"
+
+Add postNom to Student/AcademicStaff
