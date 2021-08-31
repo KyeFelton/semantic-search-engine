@@ -1,9 +1,0 @@
-prefix : <http://example.com/>
-prefix jarql: <http://jarql.com/>
-
-construct { [] :name ?n}
-where {
-?root a jarql:Root.
-?root jarql:name ?n.
-}
-
