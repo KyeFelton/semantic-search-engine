@@ -9,6 +9,7 @@ from scrapy.spiders import SitemapSpider, Rule
 # Add self.extract to each function to keep consistent
 # Stretch: a) differentiate between headings, text and lists b) add images
 
+
 class PageSpider(SitemapSpider):
     name = 'sitemap'
     allowed_domains = ['www.sydney.edu.au']
@@ -70,9 +71,12 @@ class PageSpider(SitemapSpider):
         for article_selector in response.xpath('//div[@class="featured-article parbase"]'):
             article = {}
             article['href'] = self.extract(article_selector, 'a/@href', False)
-            article['category'] = self.extract(article_selector, 'a/div[@class="b-image-link"]/div[1]', True)
-            article['title'] = self.extract(article_selector, 'a/div[@class="b-image-link"]/div[2]/div[1]/h3', True)
-            article['summary'] = self.extract(article_selector, 'a/div[@class="b-image-link"]/div[2]/div[2]/div[2]', True)
+            article['category'] = self.extract(
+                article_selector, 'a/div[@class="b-image-link"]/div[1]', True)
+            article['title'] = self.extract(
+                article_selector, 'a/div[@class="b-image-link"]/div[2]/div[1]/h3', True)
+            article['summary'] = self.extract(
+                article_selector, 'a/div[@class="b-image-link"]/div[2]/div[2]/div[2]', True)
             articles.append(article)
         return articles
 
@@ -81,15 +85,19 @@ class PageSpider(SitemapSpider):
         for news_selector in response.xpath('//div[contains(@class, "news-article-page")]'):
             news.append(self.extract(news_selector, 'a/@href'), False)
         return news
-    
+
     def get_call_outs(self, response):
         call_outs = []
         for call_out_selector in response.xpath('//div[@class="call-out parbase"]/div'):
             call_out = {}
-            call_out['title'] = call_out_selector.xpath('div[1]/h3/text()').extract_first().strip()
-            call_out['quote'] = call_out_selector.xpath('div[3]/div/text()').extract_first().strip()
-            call_out['text'] = call_out_selector.xpath('div[3]/a/text()').extract_first().strip()
-            call_out['href'] = call_out_selector.xpath('div[3]/a/@href').extract_first()
+            call_out['title'] = call_out_selector.xpath(
+                'div[1]/h3/text()').extract_first().strip()
+            call_out['quote'] = call_out_selector.xpath(
+                'div[3]/div/text()').extract_first().strip()
+            call_out['text'] = call_out_selector.xpath(
+                'div[3]/a/text()').extract_first().strip()
+            call_out['href'] = call_out_selector.xpath(
+                'div[3]/a/@href').extract_first()
             call_outs.append(call_out)
         return call_outs
 
@@ -97,9 +105,12 @@ class PageSpider(SitemapSpider):
         podcasts = []
         for podcast_selector in response.xpath('//div[@class="podcast "]'):
             podcast = {}
-            podcast['title'] = podcast_selector.xpath('h4/div/text()').extract_first().strip()
-            podcast['summary'] = podcast_selector.xpath('div[@class="podcastSummary"]/p/text()').extract_first().strip()
-            podcast['href'] = podcast_selector.xpath('div[@class="downloadLink"]/a/@href').extract_first()
+            podcast['title'] = podcast_selector.xpath(
+                'h4/div/text()').extract_first().strip()
+            podcast['summary'] = podcast_selector.xpath(
+                'div[@class="podcastSummary"]/p/text()').extract_first().strip()
+            podcast['href'] = podcast_selector.xpath(
+                'div[@class="downloadLink"]/a/@href').extract_first()
             podcasts.append(podcast)
         return podcasts
 
@@ -118,7 +129,8 @@ class PageSpider(SitemapSpider):
 class PeopleSpider(scrapy.Spider):
     name = 'people'
     allowed_domains = ['www.sydney.edu.au']
-    start_urls = ['https://www.sydney.edu.au/engineering/about/our-people/academic-staff.html']
+    start_urls = [
+        'https://www.sydney.edu.au/engineering/about/our-people/academic-staff.html']
     headers = {
         'accept': 'application/json',
         'accept-encoding': 'gzip, deflate, br',
@@ -139,26 +151,45 @@ class PeopleSpider(scrapy.Spider):
         types = [('academic-staff', '1'), ('research-student', '2')]
         for typ in types:
             headers['referer'] = 'https://www.sydney.edu.au/engineering/about/our-people/' + typ[0] + '.html'
-            url = 'https://www.sydney.edu.au/AcademicProfiles/interfaces/rest/getMembersByCodeAndJobType/5000053030H0000/' + typ[1]
-            request = scrapy.Request(url, callback=self.parse_person, headers=headers, meta={'type': typ[0]})
+            url = 'https://www.sydney.edu.au/AcademicProfiles/interfaces/rest/getMembersByCodeAndJobType/5000053030H0000/' + \
+                typ[1]
+            request = scrapy.Request(
+                url, callback=self.parse_person, headers=headers, meta={'type': typ[0]})
             yield request
 
     def parse_person(self, response):
-        categories = ['getHrPerson', 'getGrantDetails', 'getAuthorDetails']
-        if (response.meta['type'] == 'academic-staff'):
-            categories.append('getCollaborator')
-        elif (response.meta['type'] == 'research-student'):
-            categories.append('getThesisList')
+        categories = [
+            'getHrPerson',
+            'getGrantDetails',
+            'getAuthorDetails',
+            'getPublishingActiveAuthor',
+            'getAuthorsNewKeywords',
+            'getHonoursSupervisor',
+            'getExpertiseDetails',
+            'getSupervisedStudents',
+            'getResearchSupervisor',
+            'getCentreListForStaff',
+            'getBookSellingLinks',
+            'getCollaborator',
+            'getThesisList'
+        ]
 
         for person in json.loads(response.body):
             headers = self.headers
-            headers['referer'] = 'http://www.sydney.edu.au/engineering/about/our-people/' + response.meta['type'] + '/' + person['urlid'].replace('.', '-') + '.html'
+            headers['referer'] = 'http://www.sydney.edu.au/engineering/about/our-people/' + \
+                response.meta['type'] + '/' + \
+                person['urlid'].replace('.', '-') + '.html'
             for category in categories:
-                url = 'https://www.sydney.edu.au/AcademicProfiles/interfaces/rest/' + category + '/' + person['urlid']
-                yield scrapy.Request(url, callback=self.parse_data, headers=headers, meta ={'id': person['urlid'], 'category': category})
+                url = 'https://www.sydney.edu.au/AcademicProfiles/interfaces/rest/' + \
+                    category + '/' + person['urlid']
+                yield scrapy.Request(url, callback=self.parse_data, headers=headers, meta={'id': person['urlid'], 'type': response.meta['type'], 'category': category})
 
-    def parse_data(self, response):       
+    def parse_data(self, response):
         data = {}
         data['id'] = response.meta['id']
-        data[response.meta['category']] = json.loads(response.body)
+        data['type'] = response.meta['type']
+        if response.body:
+            data[response.meta['category']] = json.loads(response.body)
+        else:
+            data[response.meta['category']] = None
         yield data
