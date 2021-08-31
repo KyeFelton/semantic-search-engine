@@ -55,6 +55,7 @@ def clean_data(name, merge):
 
     filename = '../scraped_data/' + name + '_raw.json'
 
+    print('Cleaning ' + filename + ' ...')
     # load the scraped data
     with open(filename) as f:
         data = json.loads(f.read())
@@ -71,6 +72,7 @@ def clean_data(name, merge):
             f.write(json.dumps(list(data.values())))
         except AttributeError as e:
             f.write(json.dumps(list(data)))
+    print('Clean successful!')
 
 
 if __name__ == '__main__':
