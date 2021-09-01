@@ -1,34 +1,33 @@
-## Identify all the entities within the person data. Make a function for the creation of each entity ##
-## Figure out how to id entities (to avoid the creation of duplicates) ##
+Can be mapped with structured data:
 
-root: Student / AcademicStaff
-getHrPerson -> affiliationList: [ Faculty, School, Institute, ... ]
-getHrPerson -> building: Building
-getHrPerson -> hrJobList: Job
-getThesisList: [ Thesis, ... ] 
-getThesisList -> supervisors: [ AcademicStaff, ... ]
-getAuthorDetails -> researchPublications: [ Publications, ... ]
-getAuthorDetails -> researchPublications -> authors: [ People, ... ]
-getGrantDetails -> grants: [ Grant, ... ]
-getCollaborator -> collaborations: [ ResearchCollaboration, Institute, ExternalAssociate, ... ]
+Collaboration
+Grant
+AcademicStaff
+ResearchStudent
+Faculty
+Institute * pages.json
+School
+Building * https://www.sydney.edu.au/maps/campuses/?area=CAMDAR
+Amenity * https://www.sydney.edu.au/maps/campuses/?area=CAMDAR
+Course * https://www.sydney.edu.au/courses/search.html?search-type=course&aoi=engineering-and-information-technology&page=1 
+Unit * (last priority) https://www.sydney.edu.au/units
+Publication
+
+--------------------------------------
+Can't be mapped with structured data:
+
+Award
+Partnership
+Event
+Scholarship
+ExternalOrganisation
+Alumnus
+ExternalAssociate
+Research
+News
+
+--------------------------------------
+Need to add URLs to each entity so 
+that they can be searched
 
 
-Collaborations:
-"country_id": "39366",
-"countryTitle": "Germany",
-"institution": "University of Erlangen-Nuremberg",
-"relationshipdetails": "Prof. Robert Schober, Institute of Digital Communications",
-"comments": ""
-
-Grants:
-"grantCode": null,
-"title": "Security and Privacy Architecture for the Internet-of-Things",
-"type": "DVC Research/Robinson Fellowship",
-"totalAmount": "",
-"dateCommenced": 1577797200000,
-"duration": "4",
-"dateRecorded": null,
-"endDate": 1703941200000,
-"authorsString": "Yeoh P"
-
-Add postNom to Student/AcademicStaff
