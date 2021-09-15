@@ -1,0 +1,12 @@
+prefix : <http://www.sydney.edu.au/ont/>
+
+SELECT ?name ?date
+{ 
+    ?event a :Conference ; 
+           :start_datetime ?date ;
+           :title ?name .
+    
+    FILTER (?date >= "2021-10-01"^^xsd:datetime)
+}
+
+ORDER BY ?name

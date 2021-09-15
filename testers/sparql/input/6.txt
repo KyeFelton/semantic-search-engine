@@ -1,0 +1,10 @@
+prefix : <http://www.sydney.edu.au/ont/>
+
+SELECT ?name 
+{ 
+    ?event a :Seminar ; 
+           :area_of_interest 'Science';
+           :title ?name .
+}
+
+ORDER BY ?name

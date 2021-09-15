@@ -1,0 +1,8 @@
+prefix : <http://www.sydney.edu.au/ont/>
+
+SELECT ?event 
+{ 
+    ?event a :Performance .
+}
+
+ORDER BY ?event

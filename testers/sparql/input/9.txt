@@ -1,0 +1,9 @@
+prefix : <http://www.sydney.edu.au/ont/>
+
+SELECT ?name
+{ 
+    ?place a :Library .
+    ?place :name ?name .
+}
+
+ORDER BY ?name

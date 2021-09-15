@@ -1,0 +1,12 @@
+prefix : <http://www.sydney.edu.au/ont/>
+
+SELECT ?name ?time
+{ 
+    ?place :tradinghours ?b1 .
+    ?b1 :wednesday ?b2 .
+    ?b2 :open ?time .
+    ?place :name ?name .
+    
+}
+
+ORDER BY ?time ?place
