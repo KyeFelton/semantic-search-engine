@@ -1,25 +1,20 @@
 import json
 import scrapy
-from scrapy.linkextractors import LinkExtractor
-from scrapy.spiders import SitemapSpider, Rule
+from scrapy.spiders import SitemapSpider
 
-# Obtain contact info from: https://www.sydney.edu.au/perl-bin/phlookup.cgi
-# Check three pages of each form to ensure all data is captured
-# Add commenting and documentation for the code
 # Add self.extract to each function to keep consistent
 # Stretch: a) differentiate between headings, text and lists b) add images
 
-
 class PageSpider(SitemapSpider):
-    name = 'sitemap'
+    name = 'page'
     allowed_domains = ['www.sydney.edu.au']
     sitemap_urls = ['http://www.sydney.edu.au/robots.txt']
     sitemap_rules = [
         ('/engineering/', 'parse'),
     ]
     custom_settings = {
-        "FEEDS": {
-            '../scraped_data/page_raw.json': {"format": "json"},
+        'FEEDS': {
+            'page.json': {'format': 'json'},
         }
     }
 
@@ -117,79 +112,10 @@ class PageSpider(SitemapSpider):
     def extract(self, response, path, isText):
         if isText:
             data = response.xpath(path + '/text()').extract_first()
-            if data is not None and data.strip() is '':
+            if data and data.strip() == '':
                 data = response.xpath(path + '/p/text()').extract_first()
-            if data is not None:
+            if data:
                 data = data.strip()
         else:
             data = response.xpath(path).extract()
         return data
-
-
-class PeopleSpider(scrapy.Spider):
-    name = 'people'
-    allowed_domains = ['www.sydney.edu.au']
-    start_urls = [
-        'https://www.sydney.edu.au/engineering/about/our-people/academic-staff.html']
-    headers = {
-        'accept': 'application/json',
-        'accept-encoding': 'gzip, deflate, br',
-        'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8',
-        'sec-fetch-mode': 'cors',
-        'sec-fetch-site': 'same-origin',
-        'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.101 Safari/537.36',
-        'x-requested-with': 'XMLHttpRequest',
-    }
-    custom_settings = {
-        "FEEDS": {
-            '../scraped_data/people_raw.json': {"format": "json"},
-        }
-    }
-
-    def parse(self, response):
-        headers = self.headers
-        types = [('academic-staff', '1'), ('research-student', '2')]
-        for typ in types:
-            headers['referer'] = 'https://www.sydney.edu.au/engineering/about/our-people/' + typ[0] + '.html'
-            url = 'https://www.sydney.edu.au/AcademicProfiles/interfaces/rest/getMembersByCodeAndJobType/5000053030H0000/' + \
-                typ[1]
-            request = scrapy.Request(
-                url, callback=self.parse_person, headers=headers, meta={'type': typ[0]})
-            yield request
-
-    def parse_person(self, response):
-        categories = [
-            'getHrPerson',
-            'getGrantDetails',
-            'getAuthorDetails',
-            'getPublishingActiveAuthor',
-            'getAuthorsNewKeywords',
-            'getHonoursSupervisor',
-            'getExpertiseDetails',
-            'getSupervisedStudents',
-            'getResearchSupervisor',
-            'getCentreListForStaff',
-            'getBookSellingLinks',
-            'getCollaborator',
-            'getThesisList'
-        ]
-
-        for person in json.loads(response.body):
-            headers = self.headers
-            headers['referer'] = 'http://www.sydney.edu.au/engineering/about/our-people/' + \
-                response.meta['type'] + '/' + \
-                person['urlid'].replace('.', '-') + '.html'
-            for category in categories:
-                url = 'https://www.sydney.edu.au/AcademicProfiles/interfaces/rest/' + \
-                    category + '/' + person['urlid']
-                yield scrapy.Request(url, callback=self.parse_data, headers=headers, meta={'id': person['urlid'], 'type': response.meta['type'], 'category': category})
-
-    def parse_data(self, response):
-        data = {}
-        data['id'] = response.meta['id']
-        data['type'] = response.meta['type']
-        if response.body:
-            data[response.meta['category']] = json.loads(response.body)
-        else:
-            data[response.meta['category']] = None
-        yield data
