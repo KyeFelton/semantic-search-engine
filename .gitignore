@@ -278,3 +278,16 @@ TSWLatexianTemp*
 *.pyc
 *.pyc
 *.pyc
+data/scraped/unit.json
+data/scraped/place.json
+data/scraped/person.json
+data/scraped/page.json
+data/scraped/event.json
+data/scraped/course.json
+data/kg/unit.json
+data/kg/place.json
+data/kg/person.json
+data/kg/event.json
+data/kg/course.json
+data/cleaned/person.json
+data/cleaned/page.json
