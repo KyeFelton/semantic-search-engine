@@ -1,8 +1,0 @@
-prefix : <http://www.sydney.edu.au/ont/>
-
-SELECT ?event 
-{ 
-    ?event a :Seminar .
-}
-
-ORDER BY ?event
