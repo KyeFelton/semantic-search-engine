@@ -1,10 +1,4 @@
-valid_domains = ['course', 'event', 'page', 'person', 'place', 'unit']
-nlp_domains = ['page', 'person']
-
-scraped_path = './data/scraped/'
-cleaned_path = './data/cleaned/'
-kg_path = './data/kg/'
-sparql_tests_path = './testers/sparql/'
+root_dir = '/Users/kyefelton/Github/usyd-search-engine'
 
 crawler_settings = {
     'LOG_ENABLED': False
