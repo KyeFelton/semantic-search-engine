@@ -1,13 +1,14 @@
-root_dir = '/Users/kyefelton/Github/usyd-search-engine'
+root_dir = ''
 
 crawler_settings = {
-    'LOG_ENABLED': False
+    'LOG_ENABLED': True,
+    'LOG_LEVEL': 'INFO',
 }
 
 conn_details = {
   'endpoint': 'http://localhost:5820',
   'username': 'admin',
-  'password': 'admin'
+  'password': ''
 }
 
 db_name = 'usyd'
