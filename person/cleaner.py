@@ -21,7 +21,7 @@ class PersonCleaner(Cleaner):
             v = re.sub('</li>', ', ', v)
             
             # Remove html syntax
-            v = re.sub('\\t|\\r|\\u00a0', ' ', v)
+            v = re.sub('\\t|\\r|\\n|\\u00a0', ' ', v)
             v = re.sub(
                 '<[^>]*>|\\ufffd[^\\ufffd]*\\ufffd|&laquo;[^\\&raquo;]*\\&raquo;|&bull;', ' ', v)
             v = html.unescape(v)
