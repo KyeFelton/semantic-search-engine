@@ -4,6 +4,7 @@ import os
 import re
 import shutil
 
+
 def is_empty(v):
     '''Checks if a variable is None, an empty dict, an empty list, or an empty string.
 
@@ -62,33 +63,6 @@ class Cleaner():
             for k, v in page.items():
                 with open(f'{txt_path}{k.replace(" ", "_")}.txt', 'w') as f:
                     f.write(v)
-
-        # # Convert data to natural language text
-        # def to_text(data):
-        #     text = ''
-        #     if type(data) is dict:
-        #         for k, v in data.items():
-        #             text += to_text(v)
-        #     elif type(data) is list:
-        #         for i in data:
-        #             text += to_text(i)
-        #     elif type(data) is str:
-        #         text = data + '\n'
-        #     elif type(data) is int or type(data) is float:
-        #         text = str(data) + '\n'
-        #     return text
-        
-        # text_list = []
-        # for k, v in self.data.items():
-        #     text = f'{k}\n{to_text({ "data": v })}'
-        #     text_list.append(text)
-        
-        # # Write text to .txt file
-        # i = 0
-        # for i in range(0, len(text_list)):
-        #     with open(f'{txt_path}{self.name}-{str(i)}.txt', 'w') as f:
-        #         f.write(text_list[i])
-        #     i += 1
     
     def _parse(self):
 
@@ -97,12 +71,16 @@ class Cleaner():
                 res = {}
                 for k, v in data.items():
                     if not is_empty(v):
-                        res[k] = parse_struct(v)
+                        parsed = parse_struct(v)
+                        if not is_empty(parsed):
+                            res[k] = parsed
             elif type(data) is list:
                 res = []
                 for i in data:
                     if not is_empty(i):
-                        res.append(parse_struct(i))
+                        parsed = parse_struct(i)
+                        if not is_empty(parsed):
+                            res.append(parsed)
             else:
                 res = self._parse_value(data)
             return res
