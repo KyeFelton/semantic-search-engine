@@ -45,17 +45,20 @@ class EventBuilder(Builder):
         for url, event in self.data.items():
 
             # Create event entity
-            event['@id'] = self._make_uri(f'event {event["id"]}')
-            event['@type'] = self._create_class(event_type[event['event_type']], 'Event')
-            event['rdfs:label'] = event['title']
-            event['homepage'] = url
+            entity = self._make_entity(uri=f'event {event["id"]}',
+                                       # typ=self._create_class(event_type[event['event_type']], 'Event'),
+                                       typ='Event',
+                                       name=event['title'],
+                                       homepage=url,
+                                       summary=event['description'])
+            event.update(entity)
             
             # Establish the areas of interest
             areas = []
             if 'area_of_interest' in event:
                 for i in event['area_of_interest']:
                     areas.append(area_of_interest[i])
-                event['area_of_interest'] = areas
+                event['areaOfInterest'] = areas
 
             # Establish the dates
             dates = []
@@ -76,7 +79,16 @@ class EventBuilder(Builder):
                 del event['register_here']
             
             # Remove unwanted data
-            unwanted = ['publish', 'dateTitle', 'eventType', 'event_type', 'startDate', 'endDate', 'futureEvent', 'image', 'produced_by', 'imageSrc']
+            unwanted = ['publish',
+                        'dateTitle',
+                        'eventType',
+                        'event_type',
+                        'startDate',
+                        'endDate',
+                        'futureEvent',
+                        'image',
+                        'produced_by',
+                        'imageSrc']
             for i in unwanted:
                 if i in event:
                     del[event[i]]
