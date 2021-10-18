@@ -1,0 +1,31 @@
+{
+    "faculty": {
+        "https://www.sydney.edu.au/arts/about.html": ["Faculty of Arts and Social Sciences", "Arts and Social Sciences", "Arts Faculty", "Arts"],
+        "https://www.sydney.edu.au/engineering/home.html": ["Faculty of Engineering", "Engineering", "Engi"],
+        "https://www.sydney.edu.au/medicine-health/home.html": ["Faculty of Medicine and Health", "Medicine and Health", "Medi & Hlth", "Medh"],
+        "https://www.sydney.edu.au/science/home.html": ["Faculty of Science", "Science", "Science Faculty", "Scie"],
+        "https://www.sydney.edu.au/architecture/home.html": ["Sydney School of Architecture, Design and Planning", "Architecture", "Arch Des Plan", "Arch"],
+        "https://www.sydney.edu.au/business/home.html": ["University of Sydney Business School", "Business School", "Business (Business School)", "Business", "Busi"],
+        "https://www.sydney.edu.au/music/home.html": ["Sydney Conservatorium of Music", "Conservatorium", "Conservatorium of Music", "Uscm"],
+        "https://www.sydney.edu.au/law/home.html": ["University of Sydney Law School", "University Of Sydney Law School", "Sydney Law School", "Ulaw"],
+        "University Wide": ["University Wide", "University-Wide", "Generic", "Uadp"]
+    },
+    "department": {
+        "https://www.sydney.edu.au/engineering/schools/school-of-electrical-and-information-engineering.html": ["School of Electrical and Information Engineering", "Electrical and Information Engineering", "Electrical Engineering", "School of Electrical & Information Engineering"],
+        "https://www.sydney.edu.au/engineering/schools/school-of-computer-science.html": ["School of Computer Science", "Computer Science"],
+        "https://www.sydney.edu.au/engineering/schools/school-of-civil-engineering.html": ["School of Civil Engineering", "Civil Engineering", "Civil"],
+        "https://www.sydney.edu.au/engineering/schools/school-of-chemical-and-biomolecular-engineering.html": ["School of Chemical and Biomolecular Engineering", "Chemical and Biomolecular Engineering", "Chemical Engineering", "School of Chemical & Biomolecular Engineering"],
+        "https://www.sydney.edu.au/engineering/schools/school-of-aerospace-mechanical-and-mechatronic-engineering.html": ["School of Aerospace, Mechanical and Mechatronic Engineering", "Aerospace, Mechanical and Mechatronic Engineering", "Aerospace, Mechanical and Mechatronic", "Aerospace, Mechanical & Mechatronic Engineering"],
+        "https://www.sydney.edu.au/engineering/schools/school-of-biomedical-engineering.html": ["School of Biomedical Engineering", "Biomedical Engineering"],
+        "https://www.sydney.edu.au/engineering/schools/school-of-project-management.html": ["School of Project Management", "Project Management"],
+        "https://www.sydney.edu.au/science/schools/school-of-physics.html": ["School of Physics"],
+        "https://www.sydney.edu.au/science/schools/school-of-chemistry.html": ["School of Chemistry"],
+        "https://www.sydney.edu.au/science/schools/school-of-geosciences.html": ["School of Geosciences"],
+        "https://www.sydney.edu.au/science/schools/school-of-history-and-philosophy-of-science.html": ["School of History and Philosophy of Science"],
+        "https://www.sydney.edu.au/science/schools/school-of-life-and-environmental-sciences.html": ["School of Life and Environmental Sciences"],
+        "https://www.sydney.edu.au/science/schools/school-of-mathematics-and-statistics.html": ["School of Mathematics and Statistics", "School of Mathematics"],
+        "https://www.sydney.edu.au/science/schools/school-of-psychology.html": ["School of Psychology"],
+        "https://www.sydney.edu.au/science/schools/sydney-school-of-veterinary-science.html": ["Sydney School of Veterinary Science", "School of Veterinary Science"],
+        "https://www.sydney.edu.au/medicine-health/schools/sydney-medical-school.html": ["Sydney Medical School"]
+    }
+}
