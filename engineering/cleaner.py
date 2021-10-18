@@ -1,39 +1,38 @@
 import html
+import json
 import re
+import validators
 
 from base.cleaner import Cleaner
+
 
 class EngineeringCleaner(Cleaner):
 
     def __init__(self, root_dir):
         self.name = 'engineering'
+        self.redirects = {}
+        with open(f'{root_dir}/redirects.json') as f:
+            arr = json.loads(f.read())
+        for i in arr:
+            self.redirects.update(i)
         super().__init__(root_dir)
     
     def _parse_value(self, v):
-        '''Removes HTML syntax in text.
+        '''Removes HTML syntax in text, and retrieves the destination of redirected urls.
         '''
         if type(v) is str:
 
-            check = False
-            if 'b-contact-information' in v:
-                check = True
-
-            # Get links
-            links = re.findall('\/\/[\w_-]+(?:(?:\.[\w_-]+)+)[\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-]?', v)
-            links = [ f'https:{link}' for link in links ]
-
-            # Get headings
-            heading_matches = re.findall('<h.>(.*?)<\/h.>', v)
-            headings = []
-            for match in heading_matches:
-                headings.append(re.sub('<[^>]*>', '', match))
+            # Retrieve destination of redirects
+            if validators.url(v):
+                if v in self.redirects:
+                    return self.redirects[v]
 
             # Transform end of paragraphs and headings to fullstop
             v = re.sub('<\/p>|<\/h.>', '. ', v)
-            
+
             # Transform end of lists to commas
             v = re.sub('</li>', ', ', v)
-            
+
             # Remove html syntax
             v = re.sub('\\t|\\r|\\u00a0|\\n', ' ', v)
             v = re.sub(
@@ -42,14 +41,14 @@ class EngineeringCleaner(Cleaner):
 
             # Normalise punctuation and whitespace
             v = re.sub('\ {2,}', ' ', v)
-            v = re.sub('[\ |,]{3,}', ', ', v)
-            v = re.sub('[\ |.|,]{3,}', '. ', v)
-            v = re.sub('[( .,)]*:[( .,)]*', ': ', v)
-            v = re.sub('[( .,)]*;[( .,)]*', '; ', v)
-            v.strip()
+            v = re.sub('[\ |\,]{3,}', ', ', v)
+            v = re.sub('[\ |\.|\,]{3,}', '. ', v)
+            v = re.sub('[\ \.\,]*:[\.\,]+', ':', v)
+            v = re.sub('[\ \.\,]*;[\.\,]+', ';', v)
+            v = re.sub('[\ \.\,]*\?[\.\,]+', '?', v)
 
-            return { 'text': v, 'headings': headings, 'links': links }
-        
+            return v.strip()
+
         else:
             return v
     
@@ -66,44 +65,8 @@ class EngineeringCleaner(Cleaner):
                 'articles' not in page):
                 continue
             
-            url  = page['url']['text'].replace(' ', '')
+            url  = page['url'].replace(' ', '')
             del page['url']
             merged[url] = page
-            
-            text = ''
-            text += url + '\n'
-            if 'title' in page: 
-                text += page['title']['text'] + '\n'
-            if 'subtitle' in page: 
-                text += page['subtitle']['text'] + '\n'
-            if 'summary' in page: 
-                text += page['summary']['text'] + '\n' 
-            text += '\n'
-            if 'content' in page:
-                for content in page['content']:
-                    text += content['text'] + '\n'
-                text += '\n'
-            if 'accordion' in page:
-                for accordion in page['accordion']:
-                    text += accordion['heading']['text'] + '\n'
-                    text += accordion['body']['text'] + '\n'
-                text += '\n'
-            if 'articles' in page:
-                for article in page['articles']:
-                    if 'title' in article:
-                        text += article['title']['text'] + '\n'
-                    if 'summary' in article:
-                        text += article['summary']['text'] + '\n'
-                text += '\n'
-            if 'call_outs' in page:
-                for call_out in page['call_outs']:
-                    if 'title' in call_out:
-                        text += call_out['title']['text'] + '\n'
-                    if 'quote' in call_out:
-                        text += call_out['quote']['text'] + '\n'
-                    if 'text' in call_out:
-                        text += call_out['text']['text'] + '\n'
-                text += '\n'
-            self.pages.append({ page['title']['text']: text })
             
         self.data = merged
