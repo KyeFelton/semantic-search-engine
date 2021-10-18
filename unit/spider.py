@@ -22,7 +22,5 @@ class UnitSpider(SitemapSpider):
         
     def parse_data(self, response):
         print(response.request.url)
-        data = {}
         if response.body:
-            data['unit'] = json.loads(response.body)
-            yield data
+            yield {response.request.url: json.loads(response.body)}
