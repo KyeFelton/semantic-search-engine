@@ -38,9 +38,21 @@ class PlaceBuilder(Builder):
         typ = amenity['type']['name']
         if 'bus service' in typ.lower():
             typ = 'bus service'
-        amenity['@type'] = self._create_class(typ, 'Amenity')
+        # amenity['@type'] = self._create_class(typ, 'Amenity')
+        amenity['@type'] = 'Amenity'
         amenity['rdfs:label'] = amenity['name']
         amenity['homepage'] = url
+        amenity['website'] = url
+        if 'description' in amenity:
+            amenity['summary'] = amenity['description']
+        elif 'campus' in amenity and 'name' in amenity['campus']:
+            amenity['summary'] = f'Campus: {amenity["campus"]["name"]}'
+        else:
+            amenity['summary'] = ''
+
+        if 'geocode' in amenity:
+            amenity.update(amenity['geocode'])
+            del amenity['geocode']
 
         # Establish the building location
         if 'building' in amenity:
@@ -49,6 +61,10 @@ class PlaceBuilder(Builder):
         # Establish the campus location
         if 'campus' in amenity:
             amenity['campus'] = self._create_campus(amenity['campus'], url)
+
+        # TODO: Handle trading hours
+        if 'tradinghours' in amenity:
+            del amenity['tradinghours']
 
         # Remove unwanted data
         unwanted = ['type', 'links', 'staffonly']
@@ -70,11 +86,23 @@ class PlaceBuilder(Builder):
         building['@type'] = 'Building'
         building['rdfs:label'] = building['name']
         building['homepage'] = url
+        building['website'] = url
+
+        if 'geocode' in building:
+            building.update(building['geocode'])
+            del building['geocode']
 
         # Establish the campus location
-        if 'campus' in building:
+        if 'campus' in building and 'name' in building['campus']:
+            building['summary'] = f'Campus: {building["campus"]["name"]}'
             building['campus'] = self._create_campus(building['campus'], url)
-            
+        else:
+            building['summary'] = ''
+
+        # TODO: Handle trading hours
+        if 'tradinghours' in building:
+            del building['tradinghours']
+
         # Remove unwanted data
         unwanted = ['imageurl', 'staffonly', 'links']
         for i in unwanted:
@@ -94,6 +122,13 @@ class PlaceBuilder(Builder):
         campus['@type'] = 'Campus'
         campus['rdfs:label'] = campus['name']
         campus['homepage'] = url
+        campus['website'] = url
+        if 'summary' not in campus:
+            campus['summary'] = 'Sydney University Campus'
+
+        if 'geocode' in campus:
+            campus.update(campus['geocode'])
+            del campus['geocode']
 
         # Remove unwanted data
         unwanted = ['links']
