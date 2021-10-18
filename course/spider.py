@@ -18,9 +18,9 @@ class CourseSpider(SitemapSpider):
     def parse(self, response):
         url = response.request.url.replace('.html', '.coredata.json')
         yield scrapy.Request(url, callback=self.parse_data)
+        url = response.request.url.replace('.html', '.explorer.json')
+        yield scrapy.Request(url, callback=self.parse_data)
         
     def parse_data(self, response):
-        data = {}
         if response.body:
-            data['course'] = json.loads(response.body)
-            yield data
+            yield {response.request.url: json.loads(response.body)}

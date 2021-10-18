@@ -3,6 +3,7 @@ from titlecase import titlecase
 
 from base.builder import Builder
 
+
 class CourseBuilder(Builder):
     ''' JSON-LD KG Builder for Course entities '''
 
@@ -10,91 +11,135 @@ class CourseBuilder(Builder):
         '''Initialises the KG construction.
         '''
         self.name = 'course'
-        with open(f'{root_dir}/alt_names.json') as f:
-            alt_names = json.loads(f.read())
-        self.fac_map = {}
-        for fac, names in alt_names['faculty'].items():
-            for name in names:
-                self.fac_map[name.lower()] = fac
-        self.dep_map = {}
-        for dep, names in alt_names['department'].items():
-            for name in names:
-                self.dep_map[name.lower()] = dep  
+        with open(f'{root_dir}/synonyms.json') as f:
+            self.synonyms = json.loads(f.read())
         super().__init__(root_dir)
-    
+
     def _parse(self):
         '''Builds the KG.'''
-        courses = [ x['course'] for x in self.data ]
-        
+
         # For each course
-        for course in courses:
-            
+        for url, course in self.data.items():
+
             # Flatten dict structure
+            if 'attributes' not in course:
+                continue
             course.update(course['attributes'])
             del course['attributes']
-            
+            if 'description' in course:
+                summary = course['description']
+            elif 'qualification' in course:
+                summary = course['qualification']
+            else:
+                continue
+
             # Create course entity
-            course['@id'] = self._make_uri(course['id'])
-            course['@type'] = self._create_class(course['qualification'], 'Course')
-            course['rdfs:label'] = course['title']
-            
+            desc = course['content']['course-overview']['summary']
+            if 'About this course.' in desc:
+                desc = desc.split('About this course.')[1]
+            entity = self._make_entity(uri=url,
+                                       typ='Course',
+                                       name=course['title'],
+                                       label=course['id'],
+                                       homepage=url,
+                                       summary=summary,
+                                       desc=desc)
+            course.update(entity)
+
             # Establish subject areas
-            course['subjectAreas'] = []
-            if 'subjectAreasByYear' in course['areasOfStudy']:
+            course['subject'] = []
+            if 'areasOfStudy' in course and 'subjectAreasByYear' in course['areasOfStudy']:
                 for year in course['areasOfStudy']['subjectAreasByYear']:
                     for subject in year['pages']:
-                        subject['@id'] = self._make_uri(subject['id'])
-                        subject['@type'] = 'SubjectArea'
-                        subject['rdfs:label'] = subject['title']
-                        del subject['link']
-                        del subject['type']
-                        course['subjectAreas'].append({ '@id': subject['@id'] })
-            del course['areasOfStudy']
+                        entity = self._make_entity(uri=subject['id'],
+                                                   typ='Subject',
+                                                   name=None,
+                                                   label=subject['id'],
+                                                   homepage=None,
+                                                   summary=None)
+                        self._add_entity(entity)
+                        course['subject'].append({'@id': self._make_uri(subject['id'])})
+                del course['areasOfStudy']
 
             # Establish units
-            course['units'] = []
-            if 'unitsOfStudyByYear' in course['collections']:
+            course['unit'] = []
+            if 'collections' in course and 'unitsOfStudyByYear' in course['collections']:
                 for year in course['collections']['unitsOfStudyByYear']:
                     for unit in year['pages']:
-                        course['units'].append({ '@id': self._make_uri(unit['id'])})
+                        entity = self._make_entity(uri=unit['id'],
+                                                   typ='Unit',
+                                                   name=None,
+                                                   label=unit['id'],
+                                                   homepage=None,
+                                                   summary=None)
+                        self._add_entity(entity, False)
+                        course['unit'].append({'@id': self._make_uri(unit['id'])})
                 del course['collections']
-            
+
             # Establish the department
             if 'department' in course and course['department']:
-                department = {}
-                department_name = course['department']
-                if department_name not in self.fac_map:
-                    if department_name.lower() in self.dep_map:
-                        department_name = self.dep_map[department_name.lower()]
-                    else:
-                        department_name = titlecase(department_name)
-                    department['@id'] = self._make_uri(department_name)
-                    department['@type'] = 'Department'
-                    department['rdfs:label'] = department_name
-                    self._add_entity(department, False)
-                    course['department'] = { '@id': department['@id'] }
+                dept_name = titlecase(course['department'])
+                dept_url = ''
+                for k, v in self.synonyms['department'].items():
+                    if dept_name in v:
+                        dept_url = k
+                        break
+                if dept_url != '':
+                    dept = self._make_entity(uri=dept_url,
+                                             typ='Department',
+                                             name=self.synonyms['department'][dept_url][0],
+                                             label=dept_name,
+                                             homepage=None,
+                                             summary=None)
+                    self._add_entity(dept, False)
+                    course['department'] = {'@id': dept['@id']}
+                else:
+                    del course['department']
 
             # Establish the faculty
             if 'faculty' in course and course['faculty']:
-                faculty = {}
-                faculty_name = course['faculty']
-                if faculty_name.lower() in self.fac_map:
-                    faculty_name = self.fac_map[faculty_name.lower()]
+                fac_name = titlecase(course['faculty'])
+                fac_url = ''
+                for k, v in self.synonyms['faculty'].items():
+                    if fac_name in v:
+                        fac_url = k
+                        break
+                if fac_url != '':
+                    faculty = self._make_entity(uri=fac_url,
+                                                typ='Faculty',
+                                                name=self.synonyms['faculty'][fac_url][0],
+                                                label=fac_name,
+                                                homepage=None,
+                                                summary=None)
+                    self._add_entity(faculty, False)
+                    course['faculty'] = {'@id': faculty['@id']}
                 else:
-                    faculty_name = titlecase(faculty_name)
-                faculty['@id'] = self._make_uri(faculty_name)
-                faculty['@type'] = 'Faculty'
-                faculty['rdfs:label'] = faculty_name
-                self._add_entity(faculty, False)
-                course['faculty'] = { '@id': faculty['@id'] }
+                    del course['faculty']
+
+            # TODO: Handle areas of study
+            if 'areasOfStudy' in course:
+                del course['areasOfStudy']
 
             # Remove unwanted info
             # TODO: Implement fee summaries and entry requirements
-            unwanted = ['feeSummary', 'entryRequirements', 'aemCachedAt', 'active', 'coursePageSupportedYears', 
-                        'createdDate', 'departmentCode', 'group', 'published', 'startingYear', 'status', 'type']
+            unwanted = ['feeSummary',
+                        'entryRequirements',
+                        'aemCachedAt',
+                        'active',
+                        'coursePageSupportedYears',
+                        'createdDate',
+                        'departmentCode',
+                        'group',
+                        'published',
+                        'startingYear',
+                        'status',
+                        'type',
+                        'url',
+                        'template',
+                        'content']
             for i in unwanted:
                 if i in course:
-                    del[course[i]]
+                    del [course[i]]
 
             # Add course to kg
             self._add_entity(course)
