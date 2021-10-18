@@ -1,26 +1,12 @@
 import re
 import spacy
 
+from engineering.canonicaliser import *
+from engineering.categoriser import *
+from engineering.interpreter import *
+from engineering.validator import *
 from base.builder import Builder
 
-'''
-Targeted links: school-staff.html
-https: //www.sydney.edu.au/engineering/about/contact-us.html
-https: //www.sydney.edu.au/engineering/about.html
-https://www.sydney.edu.au/research/centres.html
-https: //www.sydney.edu.au/engineering/news-and-events/webinars-on-demand.html
-https://www.sydney.edu.au/engineering/industry-and-community/external-advisory-bodies.html
-https://www.sydney.edu.au/engineering/our-research/infrastructure-and-transport/centre-for-advanced-materials-technology.html
-https: //www.sydney.edu.au/engineering/our-research/research-centres-and-institutes.html
-https://www.sydney.edu.au/engineering/industry-and-community/partner-with-us.html
-https://www.sydney.edu.au/engineering/industry-and-community/women-in-engineering.html
-https://www.sydney.edu.au/engineering/industry-and-community/high-school-outreach.html
-https://www.sydney.edu.au/engineering/industry-and-community/alumni.html
-https://www.sydney.edu.au/engage/give.html
-https://www.sydney.edu.au/scholarships/domestic/bachelors-honours/faculty/engineering.html#uniqueId_Q8W4Nf5q_7_button
-Hot links: collaborate with us
-Get contact info on the side
-'''
 
 def camel_case(st):
     output = ''.join(x for x in st.title() if x.isalnum())
@@ -28,29 +14,380 @@ def camel_case(st):
 
 
 class EngineeringBuilder(Builder):
-    ''' JSON-LD KG Builder for Engineering entities '''
 
     def __init__(self, root_dir):
-        '''Initialises the KG builder.
-        '''
         self.name = 'engineering'
-        self.category_lemma = {
-            'Centres and institutes_': 'Centre',
-            'Research_': 'Research',
-            'Faculties and schools_': 'Department',
-            'Study area_': 'IGNORE',
-            'News_': 'News',
-            'Event_': 'Event', 
-            'Infrastructure_': 'Infrastructure',
-            'Topic_': 'IGNORE',
-            'People_': 'IGNORE',
-            'Partnership_': 'CHECK',
-            'Careers_': 'IGNORE',
-            'Courses_': 'IGNORE',
-            'University_': 'IGNORE',
-            'Campus_': 'IGNORE',
-        }
-        self.school_lemma = {
+        super().__init__(root_dir)
+
+    def _parse(self):
+
+        nlp = spacy.load("en_core_web_sm")
+
+        # For each page
+        for url, page in self.data.items():
+
+            # Skip invalid pages
+            if not validate_page(url, page):
+                continue
+
+            # Canonicalise url
+            url, url_can = canonicalise(url)
+
+            # Create an entity
+            entity = {}
+            entity['@id'] = self._make_uri(url)
+            if 'category' not in page:
+                page['category'] = ''
+            entity['@type'] = categorise(url=url,
+                                         title=page['title'],
+                                         category=page['category'])
+            if not url_can:
+                entity['rdfs:label'] = page['title']
+                entity['name'] = page['title']
+                entity['homepage'] = url
+            else:
+                entity['rdfs:label'] = None
+                entity['name'] = None
+                entity['homepage'] = None
+            if 'summary' in page:
+                entity['summary'] = page['summary']
+            elif 'body' in page['content'][0]:
+                entity['summary'] = page['content'][0]['body']
+            else:
+                entity['summary'] = None
+            entity['website'] = url
+            entity['description'] = []
+
+            custom_build = getattr(self, f'_build_{entity["@type"].lower()}', None)
+            entity = custom_build(url=url, page=page, entity=entity, )
+
+            # Establish contact info
+            if 'contacts' in page:
+                entity['phone'] = self._find_phone(page['contacts'])
+                entity['email'] = self._find_email(page['contacts'])
+                entity['address'] = self._find_address(page['contacts'])
+                entity['building'] = self._find_building(page['contacts'])
+
+            # Establish location
+            if 'location' in page:
+                entity['address'] = page['location']
+                entity['building'] = self._find_building(page['location'])
+
+            # Establish directors
+            entity['director'] = []
+            if 'call_outs' in page:
+                for call_out in page['call_outs']:
+                    if 'href' in call_out and 'title' in call_out:
+                        if 'director' in call_out['title'].lower():
+                            director = self._get_staff(call_out['href'])
+                            entity['director'].append(director)
+
+            # For each article
+            if 'articles' in page:
+                for article in page['articles']:
+
+                    # Skip invalid articles
+                    if not validate_article(article):
+                        continue
+
+                    # Canonicalise href
+                    href, href_can = canonicalise(article['href'])
+                    if href == url:
+                        continue
+
+                    # Create the entity
+
+                    if 'category' not in article:
+                        article['category'] = ''
+                    typ = categorise(url=href,
+                                     title=article['title'],
+                                     category=article['category'])
+                    ref = self._make_entity(uri=href,
+                                            typ=typ,
+                                            name=None,
+                                            label=article['title'],
+                                            homepage=href,
+                                            summary=article['summary'])
+                    self._add_entity(ref, False)
+
+                    # Establish relationship
+                    relation = ref['@type'].lower()
+                    if relation not in entity:
+                        entity[relation] = []
+                    entity[relation].append({'@id': ref['@id']})
+
+            self._add_entity(entity)
+
+    def _build_alumnus(self, url, page, entity):
+        entity['description'] = self._get_description(page=page,
+                                                      content=True,
+                                                      accordions=True)
+        return entity
+
+    def _build_centre(self, url, page, entity):
+        entity['description'] = self._get_description(page=page,
+                                                      content=True,
+                                                      accordions=False)
+        entity = self._map_relations(data=page['content'],
+                                     entity=entity,
+                                     source=url)
+        entity['research'] = []
+        entity['infrastructure'] = []
+
+        # For each accordion
+        if 'accordions' in page:
+            for accordion in page['accordions']:
+
+                # Identify context
+                context = interpretate(accordion['heading'], 'research')
+
+                if context == 'research':
+                    research = self._make_entity(uri=url + accordion['heading'],
+                                                 typ='Research',
+                                                 name=accordion['heading'],
+                                                 homepage=url,
+                                                 summary=accordion['body'])
+                    if 'links' in accordion:
+                        research = self._map_relations(data=[accordion],
+                                                       entity=research,
+                                                       source=url)
+                    self._add_entity(research)
+                    entity['research'].append({'@id': research['@id']})
+
+                elif context == 'infrastructure':
+                    infrastructure = self._make_entity(uri=url + accordion['heading'],
+                                                       typ='Infrastructure',
+                                                       name=accordion['heading'],
+                                                       homepage=url,
+                                                       summary=accordion['body'])
+                    self._add_entity(infrastructure)
+                    entity['infrastructure'].append(infrastructure)
+
+                else:
+                    if 'links' in accordion:
+                        if context not in entity:
+                            entity[context] = []
+                        pred_obj = self._map_links(links=accordion['links'],
+                                                   source=url)
+                        for pred, objs in pred_obj.items():
+                            if pred in entity:
+                                entity[pred].extend(objs)
+                            else:
+                                entity[pred] = objs
+
+        return entity
+
+    def _build_contact(self, url, page, entity):
+
+        entity['@type'] = 'Department'
+        entity['name'] = None
+        entity['rdfs:label'] = None
+        entity['homepage'] = url.replace('/school-staff', '')
+        entity['website'] = url.replace('/school-staff', '')
+        entity['@id'] = self._make_uri(entity['homepage'])
+
+
+        # For each accordion
+        if 'accordions' in page:
+            for accordion in page['accordions']:
+
+                # Identify context
+                context = interpretate(accordion['heading'], 'field')
+
+                # Create field of experts
+                if context == 'field':
+                    # field = self._make_entity(uri=entity['homepage'] + accordion['heading'],
+                    #                           typ='Field',
+                    #                           name=accordion['heading'],
+                    #                           homepage=entity['homepage'],
+                    #                           summary='')
+                    entity = self._map_relations(data=[accordion],
+                                                entity=entity,
+                                                source=entity['homepage'])
+                    # self._add_entity(field)
+                    # entity['field'].append(field)
+
+                # Create a staff role
+                else:
+                    rows = accordion['body'].split('.')
+                    for row in rows:
+                        row_split = row.split(',')
+                        if len(row_split) == 2:
+                            role = camel_case(row_split[1].strip())
+                            if role not in entity:
+                                entity[role] = []
+                            for link in accordion['links']:
+                                if link['text'] in row_split[0]:
+                                    entity[role].append(self._get_staff(link['href']))
+
+        return entity
+
+    def _build_department(self, url, page, entity):
+        entity['description'] = self._get_description(page=page,
+                                                      content=True,
+                                                      accordions=False)
+
+        entity = self._map_relations(data=page['content'],
+                                     entity=entity,
+                                     source=url)
+
+        if 'accordions' in page:
+            entity = self._map_relations(data=page['accordions'],
+                                         entity=entity,
+                                         source=url)
+        return entity
+
+    def _build_event(self, url, page, entity):
+        return entity
+
+    def _build_generic(self, url, page, entity):
+        entity['description'] = self._get_description(page=page,
+                                                      content=True,
+                                                      accordions=False)
+
+        entity = self._map_relations(data=page['content'],
+                                     entity=entity,
+                                     source=url)
+
+        if 'accordions' in page:
+            entity = self._map_relations(data=page['accordions'],
+                                         entity=entity,
+                                         source=url)
+
+        return entity
+
+    def _build_infrastructure(self, url, page, entity):
+        entity['infrastructure'] = []
+
+        # For each heading
+        for content in page['content']:
+            if 'heading' in content and \
+                    content['heading'] != 'Who was Sir William Tyree?.' and \
+                    content['heading'] != 'Contact us':
+
+                if content['heading'] == '$FIRST$' and 'body' in content:
+                    entity['description'] = content['body']
+
+                # Create infrastructure entity
+                elif 'body' in content:
+                    infrastructure = self._make_entity(uri=url + content['heading'],
+                                                       typ='Infrastructure',
+                                                       name=content['heading'].replace('.', ''),
+                                                       homepage=url,
+                                                       summary=content['body'])
+                    infrastructure = self._map_relations(data=[content],
+                                                         entity=infrastructure,
+                                                         source=url)
+                    self._add_entity(infrastructure)
+                    entity['infrastructure'].append({'@id': infrastructure['@id']})
+
+        return entity
+
+    def _build_news(self, url, page, entity):
+        entity['content'] = []
+        entity['mention'] = []
+        if 'date' in page:
+            entity['datePublished'] = page['date']
+        for content in page['content']:
+            if 'heading' in content and content['heading'] != '$FIRST$':
+                entity['content'].append(content['heading'])
+            if 'body' in content:
+                entity['content'].append(content['body'])
+            if 'links' in content:
+                pred_obj = self._map_links(links=content['links'],
+                                           source=url)
+                for objs in pred_obj.values():
+                    entity['mention'].extend(objs)
+        return entity
+
+    def _build_research(self, url, page, entity):
+        entity['description'] = self._get_description(page=page,
+                                                      content=True,
+                                                      accordions=False)
+
+        entity['expert'] = []
+        entity['partner'] = []
+        entity['infrastructure'] = []
+        entity['research'] = []
+
+        entity = self._map_relations(data=page['content'],
+                                     entity=entity,
+                                     source=url)
+
+        if 'accordions' in page:
+            for accordion in page['accordions']:
+
+                # Identify context
+                context = interpretate(accordion['heading'], 'research')
+
+                if context == 'research':
+                    research = self._make_entity(uri=url + accordion['heading'],
+                                                 typ='Research',
+                                                 name=accordion['heading'],
+                                                 homepage=url,
+                                                 summary=accordion['body'])
+                    research = self._map_relations(data=[accordion],
+                                                   entity=research,
+                                                   source=url)
+                    self._add_entity(research)
+                    entity['research'].append({'@id': research['@id']})
+
+                else:
+                    if 'links' in accordion:
+                        if context not in entity:
+                            entity[context] = []
+                        pred_obj = self._map_links(links=accordion['links'],
+                                                   source=url)
+                        for pred, objs in pred_obj.items():
+                            if pred in entity:
+                                entity[pred].extend(objs)
+                            else:
+                                entity[pred] = objs
+        return entity
+
+    def _build_service(self, url, page, entity):
+        entity['description'] = self._get_description(page=page,
+                                                      content=True,
+                                                      accordions=False)
+        entity['service'] = []
+
+        if 'accordions' in page:
+            for accordion in page['accordions']:
+                service = self._make_entity(uri=url + accordion['heading'],
+                                            typ='Service',
+                                            name=accordion['heading'],
+                                            homepage=url,
+                                            summary=accordion['body'])
+                service = self._map_relations(data=[accordion],
+                                              entity=service,
+                                              source=url)
+                self._add_entity(service)
+                entity['service'].append({'@id': service['@id']})
+
+        return entity
+
+    def _find_address(self, text):
+        match = re.search('Address[^\.]*', text)
+        return match.group(0) if match else None
+
+    def _find_building(self, text):
+        match = re.search('J\d\d', text)
+        if match:
+            return {'@id': self._make_uri(match.group(0))}
+        else:
+            return None
+
+    def _find_email(self, text):
+        return re.findall('([a-zA-Z0-9+._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)', text)
+
+    def _find_phone(self, text):
+        phones = []
+        phones.extend(re.findall('1800 [0-9]{3} [0-9]{3}', text))
+        phones.extend(re.findall('\+61 [0-9] [0-9]{4} [0-9]{4}', text))
+        return phones
+
+    def _find_school(self, url):
+        dictionary = {
             'aerospace': 'School of Aerospace, Mechanical and Mechatronic Engineering',
             'biomedical': 'School of Biomedical Engineering',
             'chemical': 'School of Chemical and Biomolecular Engineering',
@@ -59,571 +396,112 @@ class EngineeringBuilder(Builder):
             'electrical': 'School of Electrical and Information Engineering',
             'project': 'School of Project Management'
         }
-        self.ignore_titles = ['about', 'research centres and institutes', 'contact us', 'schools', 'who was sir william tyree?', 'how to engage']
-        super().__init__(root_dir)
+        for k in dictionary:
+            if k in url:
+                return dictionary[k]
+        return None
 
-    def _parse(self):
+    def _get_description(self, page, content=False, accordions=False):
+        description = []
+        if content and 'content' in page:
+            for section in page['content']:
+                if 'body' in section:
+                    description.append(section['body'])
+        if accordions and 'accordions' in page:
+            for accordion in page['accordions']:
+                if 'body' in accordion:
+                    description.append(accordion['body'])
+        return description
 
-        nlp = spacy.load("en_core_web_sm")
-        
-        # For each page
-        for url, page in self.data.items():
-            
-            url_directory = url.split('/')[4]
-            url_file = (url.split('/')[-1]).replace('.html','')
-            category = ''
-            
-            # Categorise the page
-            if 'category' in page:
-                category = self.category_lemma[page['category']['text']]
+    def _get_staff(self, url):
+        staff = {}
+        staff['@type'] = 'Staff'
+        staff['homepage'] = url
+        staff['website'] = url
+        staff['name'] = None
+        staff['summary'] = None
 
-            if 'category' not in page or category == 'CHECK': 
-                if '/news-and-events/' in url:
-                    category = 'News'
-                elif 'do-not-publish' in url:
-                    category = 'IGNORE'
-                elif url_file == 'school-staff':
-                    category = 'Staff'
-                elif 'Centre' in page['title']['text'] and not 'Centred' in page['title']['text']:
-                    category = 'Centre'
-                elif 'Hub' in page['title']['text']:
-                    category = 'Centre'
-                elif '/laboratories-and-facilities/' in url:
-                    category = 'Infrastructure'
-                elif 'services' in page['title']['text'].lower():
-                    category = 'Service'
-                elif '/our-research/' in url:
-                    category = 'Research'
-                elif '/study/' in url:
-                    category = 'IGNORE'
-                elif '/about' in url:
-                    category == 'IGNORE'
-                else:
-                    category == 'Research'
-            
-            for req in self.ignore_titles:
-                if req in page['title']['text'].lower():
-                    category = 'IGNORE'
-            
-            # If ignore
-            if category == 'IGNORE':
-                
-                # Continue to next page
+        uid = re.sub('\.html.*|\.php.*', '', url)
+        if '/people/' in uid:
+            if '/profiles/' in url:
+                uid = uid.split('/profiles/')[1]
+            else:
+                uid = uid.split('/people/')[1]
+        elif '/academic-staff/' in uid:
+            uid = uid.split('/academic-staff/')[1]
+            if '-' in uid and '.' not in uid:
+                uid = re.sub('-', '.', uid)
+
+        if '/phlookup.cgi?' in uid:
+            name = (uid.split('&name=')[1]).split('&')[0]
+            staff['@id'] = self._make_uri(name.replace('+', '.'))
+            staff['rdfs:label'] = name.replace('+', ' ').title()
+        else:
+            staff['@id'] = self._make_uri(uid)
+            staff['rdfs:label'] = ' '.join([i.title() for i in uid.split('.') if not i.isdigit()])
+
+        self._add_entity(staff, False)
+        return {'@id': staff['@id']}
+
+    def _map_links(self, links, source):
+        pred_obj = {}
+        for link in links:
+
+            # Skip invalid articles
+            if 'href' not in link or 'text' not in link:
+                continue
+            elif not validate_url(link['href']):
                 continue
 
-            # If news
-            if category == 'News':
-            
-                # Continue for now
+            # Canonicalise href
+            href, href_can = canonicalise(link['href'])
+            if href == source:
                 continue
 
-            # # If unknown
-            # if category == 'UNKNOWN':
-                
-            #     # Continue for now
-            #     continue
-            
-            # Create an entity
-            entity = {}
-            entity['@id'] = self._make_uri(url)
-            entity['@type'] = 'Thing'
-            entity['rdfs:label'] = page['title']['text']
-            entity['homepage'] = url
+            # Categorise the link
+            obj = {}
+            obj['@type'] = categorise(href, link['text'])
 
-            # Establish the description
-            entity['description'] = ''
-            if 'summary' in page:
-                entity['description'] = page['summary']['text'] + '\n'
-            if 'content' in page:
-                for content in page['content']:
-                    entity['description'] += content['text'] + '\n'
+            # Create the entity
+            if obj['@type'] == 'Staff':
+                obj.update(self._get_staff(href))
+            else:
+                obj['@id'] = self._make_uri(href)
+                obj['rdfs:label'] = link['text']
+                obj['homepage'] = href
+                obj['website'] = href
+                obj['summary'] = None
+                obj['name'] = None
+                # TODO: Canonicalize entities with URIs based off URLs and entities with URIs based off names
+                # if not href_can and \
+                #         obj['@type'] == 'External' or \
+                #         obj['@type'] == 'Centre':
+                #     self._make_equivalent(obj, obj['name'])
+                self._add_entity(obj)
 
-            # For each article
-            if 'articles' in page:
-                for article in page['articles']:
-                    continue
-                
-                    # Establish relationship to article
-                    # if 'href' in article:
-                    #     if 'category' in article and article['category'] in categories:
-                    #         prop = self.categories[article['category']['text']]
-                    #     else:
-                    #         prop = 'relatedTopic'
-                    #     if prop not in entity:
-                    #         entity[prop] = []
-                    #     entity[prop].append({ '@id': self._make_uri(article['href']['text']) })
+            # Map pred to obj
+            if obj['@type'] == 'Generic':
+                pred = 'mention'
+            elif obj['@type'] == 'External':
+                pred = 'partner'
+            elif obj['@type'] == 'Staff':
+                pred = 'expert'
+            else:
+                pred = obj['@type'].lower()
+            if pred not in pred_obj:
+                pred_obj[pred] = []
+            pred_obj[pred].append({'@id': obj['@id']})
 
-            # Establish contact info
-            if 'contacts' in page:
-                entity['phone'] = self._phone(page['contacts']['text'])
-                entity['email'] = self._email(page['contacts']['text'])
-                entity['address'] = self._address(page['contacts']['text'])
-                entity['building'] = self._building(page['contacts']['text'])
-                
-            if 'location' in page: 
-                entity['address'] = page['location']['text']
-                entity['building'] = self._building(page['location']['text'])
-            
-            # Establish directors/heads
-            entity['head'] = []
-            entity['director'] = []
-            if 'call_outs' in page:
-                for call_out in page['call_outs']:
-                    if 'href' in call_out and 'title' in call_out:
-                        if 'director' in call_out['title']['text'].lower():
-                            staff = self._expert([ call_out['href']['links'][0] ])
-                            entity['director'].extend(staff) 
-            
-            # If  research
-            if category == 'Research':
-                
-                # Establish type
-                entity['@type'] = 'Research'
+        return pred_obj
 
-                # Establish experts
-                if 'content' in page:
-                    links = [ link for content in page['content'] for link in content['links']]
-                    entity['expert'] = self._expert(links)
+    def _map_relations(self, data, entity, source):
+        for section in data:
+            if 'links' in section:
 
-                # Establish facilities
-                if 'content' in page:
-                    links = [ link for content in page['content'] for link in content['links']]
-                    entity['facility'] = self._facility(links)
-
-                # Establish partners
-                if 'description' in entity:
-                    entity['partner'] = self._partner(entity['description'], nlp, url)
-
-                # Establish sub disciplines
-                entity['subDiscpline'] = []
-                if 'accordions' in page:
-                    for accordion in page['accordions']:
-
-                        # If academic staff
-                        if accordion['heading']['text'] == 'Academic staff':
-                            entity['expert'] += self._expert(accordion['body']['links'])
-
-                        # If research associate
-                        elif accordion['heading']['text'] == 'Research associates':
-                            entity['researchAssociate'] = self._expert(accordion['body']['links'])
-
-                        # If honorary associate
-                        elif accordion['heading']['text'] == 'Honorary associates':
-                            entity['honoraryAssociate'] = self._person_from_name(accordion['body']['text'], nlp, url)
-                            
-                        else:
-                            # Create project entity
-                            project = {}
-                            project['@id'] = self._make_uri(url + accordion['heading']['text'])
-                            project['@type'] = 'Research'
-                            project['rdfs:label'] = accordion['heading']['text']
-                            project['homepage'] = url
-
-                            # Establish the description
-                            project['description'] = accordion['body']['text']
-
-                            # Establish experts
-                            project['expert'] = self._expert(accordion['body']['links'])
-
-                            # Establish facilities
-                            project['facility'] = self._facility(accordion['body']['links'])
-
-                            # Establish partners
-                            project['partner'] = self._partner(accordion['body']['text'], nlp, url)
-
-                            # Add research to kg
-                            self._add_entity(project)
-
-                            entity['subDiscpline'].append({ '@id': project['@id'] })
-
-            # If centre
-            if category == 'Centre':
-
-                # Establish type
-                entity['@type'] = 'Centre'
-                entity['centre'] = []
-                entity['research'] = []
-                entity['facility'] = []
-                entity['service'] = []
-                entity['expert'] = []
-                entity['advisor'] = []
-                entity['adminStaff'] = []
-
-                # For each article
-                if 'articles' in page:
-                    for article in page['articles']:
-
-                        if 'category' in article:
-
-                            # Establish centres
-                            if article['category']['text'] == 'Centres and institutes_':
-                                entity['centre'].append({ '@id': self._make_uri(article['href']['links'][0]) })
-
-                            # Establish services
-                            elif 'services' in article['title']['text'] or 'consultancy' in article['title']['text']:
-                                entity['service'].append({ '@id': self._make_uri(article['href']['links'][0]) })
-                            
-                            # Establish research
-                            elif article['category']['text'] == 'Research_':
-                                research = {}
-                                research['@id'] = self._make_uri(article['href']['links'][0])
-                                research['@type'] = 'Research'
-                                research['homepage'] = article['href']['links'][0]
-                                self._add_entity(research)
-                                entity['research'].append({ '@id': self._make_uri(article['href']['links'][0]) })
-
-                            # Establish facilities
-                            elif article['category']['text'] == 'Infrastructure_':
-                                entity['facility'].append({ '@id': self._make_uri(article['href']['links'][0]) })
-
-                # For each accordion
-                if 'accordions' in page:
-                    for accordion in page['accordions']:
-
-                        # Establish academics
-                        is_academic = False
-                        academic_words = {'academic', 'research', 'technical'}
-                        for academic_word in academic_words:
-                            if academic_word in accordion['heading']['text'].lower():
-                                is_academic = True
-                                break
-
-                        # Establish advisors
-                        is_advisory = False
-                        advisory_words = {'advisory', 'board'}
-                        for advisory_word in advisory_words:
-                            if advisory_word in accordion['heading']['text'].lower():
-                                is_advisory = True
-                                break
-
-                        # Establish admin staff
-                        is_admin = False
-                        admin_words = {'admin', 'staff'}
-                        for admin_word in admin_words:
-                            if admin_word in accordion['heading']['text'].lower():
-                                is_admin = True
-                                break
-                        
-                        if is_academic:
-                            entity['expert'].append(self._expert(accordion['body']['links']))
-
-                        elif is_academic:
-                            entity['advisor'].append(self._expert(accordion['body']['links']))
-
-                        elif is_academic:
-                            entity['adminStaff'].append(self._expert(accordion['body']['links']))
-                            
-                        # Establish facilities
-                        elif 'facilities' in accordion['heading']['text'].lower():
-                            entity['facility'] = []
-                            for link in accordion['body']['links']:
-                                entity['facility'].append({ '@id': self._make_uri(link) })
-
-                        # Establish services
-                        elif 'services' in accordion['heading']['text'].lower():
-                            entity['service'] = []
-                            for link in accordion['body']['links']:
-                                entity['service'].append({ '@id': self._make_uri(link) })
-                
-            # If infrastructure
-            if category == 'Infrastructure':
-                
-                entity['@type'] = 'Facility'
-                entity['facility'] = []
-
-                # For each heading
-                if 'content' in page:
-                    for content in page['content']:
-                        for heading in content['headings']:
-
-                            # Create infrastructure entity
-                            infrastructure = {}
-                            infrastructure['@id'] = self._make_uri(url + heading)
-                            infrastructure['@type'] = 'Facility'
-                            infrastructure['homepage'] = url
-                            infrastructure['rdfs:label'] = heading
-                            
-                            self._add_entity(infrastructure)
-                            entity['facility'].append({ '@id': infrastructure['@id'] })
-            
-            # If school
-            if category == 'Department':
-
-                # Establish type
-                entity['@id'] = self._make_uri(page['title']['text'])
-                entity['@type'] = 'Department'
-                entity['centre'] = []
-                entity['research'] = []
-
-                # For each accordion
-                if 'accordions' in page:
-                    
-                    for accordion in page['accordions']:
-
-                        # Ignore courses
-                        is_course = False
-                        course_words = {'scheme', 'degree', 'course', 'project', 'program', 'postgraduate'}
-                        for course_word in course_words:
-                            if course_word in accordion['heading']['text'].lower():
-                                is_course = True
-                                break
-                        
-                        if is_course:
-                            continue
-
-                        # Establish facilities
-                        elif 'facilities' in accordion['heading']['text'].lower():
-                            entity['facility'] = []
-                            for link in accordion['body']['links']:
-                                entity['facility'].append({ '@id': self._make_uri(link) })
-
-                        # Establish services
-                        elif 'services' in accordion['heading']['text'].lower():
-                            entity['service'] = []
-                            for link in accordion['body']['links']:
-                                entity['service'].append({ '@id': self._make_uri(link) })
-
-                        # Establish research
-                        else:
-                            for link in accordion['body']['links']:
-                                if 'centre' in link or 'hub' in link:
-                                    entity['centre'].append({ '@id': self._make_uri(link) })
-                                else:
-                                    entity['research'].append({ '@id': self._make_uri(link) })
-
-                # For each article
-                if 'articles' in page:
-                    for article in page['articles']:
-
-                        if 'category' in article:
-
-                            # Establish centres
-                            if article['category']['text'] == 'Centres and institutes_':
-                                entity['centre'].append({ '@id': self._make_uri(article['href']['links'][0]) })
-
-                            # Establish research
-                            if article['category']['text'] == 'Research_':
-                                entity['research'].append({ '@id': self._make_uri(article['href']['links'][0]) })
-
-                if 'content' in page:
-                    for content in page['content']:
-
-                        # Establish centres
-                        for link in content['links']:
-                            link_suffix = link.split('/')[-1]
-                            if 'centre' in link_suffix or 'hub' in link_suffix:
-                                entity['centre'].append({ '@id': self._make_uri(link) })
-
-
-            # If service
-            if category == 'Service':
-
-                entity['@type'] = 'Service'
-
-                # For each accordion
-                entity['specialty'] = []
-                if 'accordions' in page:
-                    for accordion in page['accordions']:
-
-                        # Create service entity
-                        service = {}
-                        service['@id'] = self._make_uri(url + accordion['heading']['text'])
-                        service['@type'] = 'Service'
-                        service['rdfs:label'] = accordion['heading']['text']
-                        service['homepage'] = url
-                        service['description'] = accordion['body']['text']
-                        service['contact'] = self._expert(accordion['body']['links'])
-
-                        self._add_entity(service)
-                        entity['specialty'].append({ '@id': service['@id'] })
-
-            # If staff
-            if category == 'Staff':
-                
-                # Get the school name
-                school_name = ''
-                for k in self.school_lemma:
-                    if k in url:
-                        school_name = self.school_lemma[k]
-                
-                # Establish type
-                entity['@id'] = self._make_uri(school_name)
-                entity['@type'] = 'Department'
-                del entity['rdfs:label']
-                del entity['description']
-                entity['field'] = []
-                
-                # For each accordion
-                for accordion in page['accordions']:
-
-                    # Check if admin roles
-                    admin_words = {'leadership', 'coordinator', 'admin', 'technical service', 'director'}
-                    is_admin = False
-                    for admin_word in admin_words:
-                        if admin_word in accordion['heading']['text'].lower():
-                            is_admin = True
-                            break
-                        
-                    
-                    # Establish admin role
-                    if is_admin:
-                        
-                        # Map last names to ids
-                        name_to_uri = {}
-                        for link in accordion['body']['links']:
-                            surname_matches = re.search('([^\.]*)(\.php|\.html)', link.replace('-', '.'))
-                            if surname_matches:
-                                surname = surname_matches.group(1).title()
-                                name_to_uri[surname] = self._expert([link])
-                            
-                        # Map roles to staff
-                        rows = accordion['body']['text'].split('.')
-                        for row in rows:
-                            row_split = row.split(',')
-                            if len(row_split) == 2:
-                                role = camel_case(row_split[1].strip())
-                                surname = (row.split(',')[0]).split(' ')[-1]
-                                if role not in entity:
-                                    entity[role] = []
-                                if surname in name_to_uri:
-                                    entity[role].append(name_to_uri[surname][0])
-
-                    # Establish field roles
+                pred_obj = self._map_links(section['links'], source)
+                for pred, objs in pred_obj.items():
+                    if pred in entity:
+                        entity[pred].extend(objs)
                     else:
-                        field = {}
-                        field['@id'] = self._make_uri(accordion['heading']['text'])
-                        field['@type'] = 'Field'
-                        field['rdfs:label'] = accordion['heading']['text']
-                        field['homepage'] = ''.join(url.split('/')[:-1])
-                        field['expert'] = self._expert(accordion['body']['links'])
-                        self._add_entity(field)
-                        entity['field'].append(field)
-                
-            # Add entity to kg
-            self._add_entity(entity) 
-
-
-    def _address(self, text):
-        match = re.search('Address[^\.]*', text)
-        return match.group(0) if match else None
-    
-    def _building(self, text):
-        match = re.search('J\d\d', text)
-        return { '@id': self._make_uri(match.group(0)) } if match else None
-    
-    def _email(self, text):
-        return re.findall('([a-zA-Z0-9+._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)', text)
-    
-    def _expert(self, links):
-        experts =  []
-        
-        # For each link
-        for link in links:
-
-            slink = re.sub('\.html|\.php|\?.*', '', link)
-
-            # Check if the link points to a person
-            uid = None
-            if '/engineering/people/' in slink:
-                uid = slink.split('/people/')[1]
-            elif '/about/our-people/academic-staff/' in slink:
-                uid = slink.split('/academic-staff/')[1]
-                if '-' in uid and '.' not in uid:
-                    uid = re.sub('-', '.', uid)
-            elif '/medicine/people/academics/profiles/' in slink:
-                uid = slink.split('/profiles/')[1]
-
-            # If link points to person
-            if uid:
-                if not 'engineering' in link:
-                    person = {}
-                    person['@id'] = self._make_uri(uid)
-                    person['@type'] = 'AcademicStaff'
-                    person['rdfs:label'] = uid.replace('.', ' ').title()
-                    person['homepage'] = link
-                    self._add_entity(person)
-                
-                experts.append({ '@id': self._make_uri(uid) })
-
-        return experts
-
-    def _facility(self, links):
-        facilities = []
-
-        # For each link
-        for link in links:
-            # If the link points to a facility
-            if '/our-research/laboratories-and-facilities/' in link:
-                s = link.split('/laboratories-and-facilities/')[1]
-
-                # Create facility entity 
-                s = re.sub('\.html|\?.*', '', s)
-                name = s.replace('-', ' ').title()
-                facility = {}
-                facility['@id'] = self._make_uri(name)
-                facility['@type'] = 'Facility'
-                facility['rdfs:label'] = name
-                facility['homepage'] = link
-                self._add_entity(facility)
-                facilities.append({ '@id': facility['@id'] })
-
-        return facilities
-
-    
-    def _partner(self, text, nlp, link):
-        partners = []
-        
-        # Find entity mentions in text
-        matches = re.findall('Our partners:[^\.]*|Our collaborators[^\.]*|Industry partners:[^\.]*', text)
-        match_str = '. '.join(matches)
-        doc = nlp(match_str)
-        
-        # For each entity mentioned
-        for ent in doc.ents:
-
-            partner = {}
-            partner['rdfs:label'] = ent.text
-
-            # If person, create person entity
-            if ent.label_ == 'PERSON':
-                partner['@id'] = self._make_uri(ent.text)
-                partner['@type'] = 'ExternalAssosciate'
-                partner['homepage'] = link
-                self._add_entity(partner)
-                partners.append({ '@id': partner['@id'] })
-
-            # If organisation, create organisation entity
-            elif ent.label_ == 'ORG':
-                partner['@id'] = self._make_uri(ent.text)
-                partner['@type'] = 'ExternalOrganisation'
-                partner['homepage'] = link
-                self._add_entity(partner)
-                partners.append({ '@id': partner['@id'] })
-        
-        return partners
-    
-    def _person_from_name(self, text, nlp, link):
-        persons = []
-        doc = nlp(text)
-
-        # For each person mentioned
-        for ent in doc.ents:
-            if ent.label_ == 'PERSON':
-
-                # Create person entity
-                person = {}
-                person['@id'] = self._make_uri(ent.text)
-                person['@type'] = 'Person'
-                person['rdfs:label'] = ent.text
-                person['homepage'] = link
-                self._add_entity(person)
-                persons.append({ '@id': person['@id'] })
-
-        return persons
-
-    def _phone(self, text):
-        phones = []
-        phones.extend(re.findall('1800 [0-9]{3} [0-9]{3}', text))
-        phones.extend(re.findall('\+61 [0-9] [0-9]{4} [0-9]{4}', text))
-        return phones
-
+                        entity[pred] = objs
+        return entity
