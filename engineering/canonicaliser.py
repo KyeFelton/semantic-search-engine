@@ -31,38 +31,9 @@ thesaurus = {
     'https://www.sydney.edu.au/charles-perkins-centre/home.html': [
         'https://www.sydney.edu.au/charles-perkins-centre/',
     ],
-    # 'https://www.sydney.edu.au/engineering/our-research/energy-resources-and-the-environment/waste-transformation-hub.html': [
-    #     'https://sydney.edu.au/engineering/our-research/energy-resources-and-the-environment/waste-transformation-hub.html',
-    # ],
     'https://www.sydney.edu.au/engineering/our-research/robotics-and-intelligent-systems/australian-centre-for-field-robotics/mining.html': [
         'http://www.acfr.usyd.edu.au/rtcma/index.shtml',
     ],
-    # 'https://www.sydney.edu.au/engineering/our-research/data-science-and-computer-engineering/ubtech-sydney-artificial-intelligence-centre.html': [
-    #     'https://sydney.edu.au/engineering/our-research/data-science-and-computer-engineering/ubtech-sydney-artificial-intelligence-centre.html',
-    # ],
-    # 'https://www.sydney.edu.au/engineering/schools/school-of-computer-science.html': [
-    #     'https://www.sydney.edu.au/engineering/about/school-of-computer-science.html',
-    #     'https://www.sydney.edu.au/engineering/about/school-of-information-technologies.html',
-    # ],
-    # 'https://www.sydney.edu.au/engineering/schools/school-of-civil-engineering.html': [
-    #     'http://www.sydney.edu.au/engineering/civil/',
-    #     'https://www.sydney.edu.au/engineering/about/school-of-civil-engineering.html',
-    # ],
-    # 'https://www.sydney.edu.au/engineering/schools/school-of-computer-science.html': [
-    #     'https://www.sydney.edu.au/engineering/about/school-of-computer-science.html',
-    # ],
-    # 'https://www.sydney.edu.au/engineering/schools/school-of-computer-science.html': [
-    #     'https://www.sydney.edu.au/engineering/about/school-of-computer-science.html',
-    # ],
-    # 'https://www.sydney.edu.au/engineering/schools/school-of-computer-science.html': [
-    #     'https://www.sydney.edu.au/engineering/about/school-of-computer-science.html',
-    # ],
-    # 'https://www.sydney.edu.au/engineering/schools/school-of-computer-science.html': [
-    #     'https://www.sydney.edu.au/engineering/about/school-of-computer-science.html',
-    # ],
-    # 'https://www.sydney.edu.au/engineering/schools/school-of-computer-science.html': [
-    #     'https://www.sydney.edu.au/engineering/about/school-of-computer-science.html',
-    # ],
 }
 
 def canonicalise(url):
