@@ -1,19 +1,13 @@
 import argparse
 import importlib
-import io
-import json
 import os
-import pandas as pd
 import scrapy.crawler as sc
-import shutil
 import stardog
-import subprocess
-import sys
-
 from config import *
 
 
 ap = argparse.ArgumentParser()
+
 
 def get_class(package, module):
     module_name = f'{package}.{module}'
@@ -21,11 +15,12 @@ def get_class(package, module):
     clas = getattr(importlib.import_module(module_name), class_name)
     return clas
 
+
 if __name__ == '__main__':
     
     ap.add_argument('-s', '--scrape', required=False, help='Scrape new data from the web', action='store_true')
     ap.add_argument('domains', help='Specify which domains to build the KG', nargs='+')
-    domains =  vars(ap.parse_args())['domains']
+    domains = vars(ap.parse_args())['domains']
          
     
     # Create the data directory
@@ -33,7 +28,7 @@ if __name__ == '__main__':
         data_dir = f'{root_dir}/{d}/data/'
         if not os.path.exists(data_dir):
             os.mkdir(data_dir)
-    
+
     # Crawl and scrape the domain
     if vars(ap.parse_args())['scrape']:
         process = sc.CrawlerProcess(settings=crawler_settings)
@@ -59,7 +54,7 @@ if __name__ == '__main__':
         cleaner.clean()
     print(f'Finished cleaning data')
 
-    # Build kg and docs
+    # Build the kg
     for d in domains:
         print(f'Building: {d}')
         builder_class = get_class(d, 'builder')
@@ -73,7 +68,7 @@ if __name__ == '__main__':
         if db_name in db_name_list:
             db = admin.database(db_name)
             db.drop()
-        db = admin.new_database(db_name, {'search.enabled': True, 'docs.opennlp.models.path': f'{root_dir}/nlp/OpenNLP'})
+        db = admin.new_database(db_name, {'search.enabled': True})
         print(f'Created database: {db_name}')
 
     # Upload kg to db
