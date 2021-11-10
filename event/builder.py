@@ -46,7 +46,7 @@ class EventBuilder(Builder):
 
             # Create event entity
             entity = self._make_entity(uri=f'event {event["id"]}',
-                                       # typ=self._create_class(event_type[event['event_type']], 'Event'),
+                                       typ=self._create_class(event_type[event['event_type']], 'Event'),
                                        typ='Event',
                                        name=event['title'],
                                        homepage=url,
