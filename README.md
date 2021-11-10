@@ -1,5 +1,7 @@
-# USYD Search Engine
+## usydKnowledge: a knowledge graph for the University of Sydney
 
-Many users rely on search engines to retrieve information. However, despite their importance, the University of Sydney’s site search engine leaves much to be desired. Motivated by developments in the fields of semantic search, this project aims to create a semantic search engine that exploits a knowledge graph for information retrieval.
+usydKnowledge is a Python program designed to extract and model information about the University of Sydney from the Web. Built on top of [Scrapy](https://scrapy.org/) and [spaCy](https://spacy.io/), the program follows a customised, modular framework that enables extensions to be implemented with relative ease.
 
-The project is currently in progress and expected to be completed by November 2021.
+Before starting the program, a valid instance of Stardog's [Enterprise Knowledge Graph](https://www.stardog.com/) platform must be running and configured in config.py. 
+
+Want to see the knowledge graph in action? Click [here](https://kyefelton.github.io/usydsearch) to check it out.
