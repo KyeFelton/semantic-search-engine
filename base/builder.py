@@ -4,8 +4,8 @@ import inflect
 import json
 import os
 
-ont_url = 'http://www.sydney.edu.au/ont/'
-kg_url = 'http://www.sydney.edu.au/kg/'
+ont_url = 'http://www.sydney.edu.au/kg/ont/'
+kg_url = 'http://www.sydney.edu.au/kg/kg/'
 inflect = inflect.engine()
 valid_singular = ['Campus', 'Thesis']
 
@@ -32,9 +32,6 @@ class Builder:
             '@vocab': ont_url,
             'stardog': 'tag:stardog:api:',
             'xsd': 'http://www.w3.org/2001/XMLSchema#',
-            # 'homepage': {
-            #     '@type': 'xsd:anyURI'
-            # },
             'latitude': {
                 '@type': 'xsd:double'
             },
