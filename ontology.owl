@@ -1,0 +1,567 @@
+<?xml version="1.0"?>
+<Ontology xmlns="http://www.w3.org/2002/07/owl#"
+     xml:base="http://www.sydney.edu.au/kg/ont/"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     ontologyIRI="http://www.sydney.edu.au/kg/ont/">
+    <Prefix name="" IRI="http://www.sydney.edu.au/ont/"/>
+    <Prefix name="owl" IRI="http://www.w3.org/2002/07/owl#"/>
+    <Prefix name="rdf" IRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
+    <Prefix name="xml" IRI="http://www.w3.org/XML/1998/namespace"/>
+    <Prefix name="xsd" IRI="http://www.w3.org/2001/XMLSchema#"/>
+    <Prefix name="rdfs" IRI="http://www.w3.org/2000/01/rdf-schema#"/>
+    <Annotation>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <Literal xml:lang="en">This is an ontology about the University of Sydney (alpha version)</Literal>
+    </Annotation>
+    <Declaration>
+        <Class abbreviatedIRI=":Alumnus"/>
+    </Declaration>
+    <Declaration>
+        <Class abbreviatedIRI=":Amenity"/>
+    </Declaration>
+    <Declaration>
+        <Class abbreviatedIRI=":Book"/>
+    </Declaration>
+    <Declaration>
+        <Class abbreviatedIRI=":Building"/>
+    </Declaration>
+    <Declaration>
+        <Class abbreviatedIRI=":Campus"/>
+    </Declaration>
+    <Declaration>
+        <Class abbreviatedIRI=":Centre"/>
+    </Declaration>
+    <Declaration>
+        <Class abbreviatedIRI=":Collaboration"/>
+    </Declaration>
+    <Declaration>
+        <Class abbreviatedIRI=":Course"/>
+    </Declaration>
+    <Declaration>
+        <Class abbreviatedIRI=":Department"/>
+    </Declaration>
+    <Declaration>
+        <Class abbreviatedIRI=":Event"/>
+    </Declaration>
+    <Declaration>
+        <Class abbreviatedIRI=":External"/>
+    </Declaration>
+    <Declaration>
+        <Class abbreviatedIRI=":Faculty"/>
+    </Declaration>
+    <Declaration>
+        <Class abbreviatedIRI=":Grant"/>
+    </Declaration>
+    <Declaration>
+        <Class abbreviatedIRI=":Infrastructure"/>
+    </Declaration>
+    <Declaration>
+        <Class abbreviatedIRI=":News"/>
+    </Declaration>
+    <Declaration>
+        <Class abbreviatedIRI=":Organisation"/>
+    </Declaration>
+    <Declaration>
+        <Class abbreviatedIRI=":Person"/>
+    </Declaration>
+    <Declaration>
+        <Class abbreviatedIRI=":Place"/>
+    </Declaration>
+    <Declaration>
+        <Class abbreviatedIRI=":Publication"/>
+    </Declaration>
+    <Declaration>
+        <Class abbreviatedIRI=":Research"/>
+    </Declaration>
+    <Declaration>
+        <Class abbreviatedIRI=":Scholarship"/>
+    </Declaration>
+    <Declaration>
+        <Class abbreviatedIRI=":Service"/>
+    </Declaration>
+    <Declaration>
+        <Class abbreviatedIRI=":Staff"/>
+    </Declaration>
+    <Declaration>
+        <Class abbreviatedIRI=":Student"/>
+    </Declaration>
+    <Declaration>
+        <Class abbreviatedIRI=":Study"/>
+    </Declaration>
+    <Declaration>
+        <Class abbreviatedIRI=":Subject"/>
+    </Declaration>
+    <Declaration>
+        <Class abbreviatedIRI=":Thesis"/>
+    </Declaration>
+    <Declaration>
+        <Class abbreviatedIRI=":Unit"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty abbreviatedIRI=":affiliation"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty abbreviatedIRI=":author"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty abbreviatedIRI=":building"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty abbreviatedIRI=":campus"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty abbreviatedIRI=":collaboration"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty abbreviatedIRI=":course"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty abbreviatedIRI=":department"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty abbreviatedIRI=":director"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty abbreviatedIRI=":expert"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty abbreviatedIRI=":faculty"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty abbreviatedIRI=":grantee"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty abbreviatedIRI=":infrastructure"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty abbreviatedIRI=":mention"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty abbreviatedIRI=":partner"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty abbreviatedIRI=":research"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty abbreviatedIRI=":service"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty abbreviatedIRI=":supervisor"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty abbreviatedIRI=":unit"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty abbreviatedIRI=":address"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty abbreviatedIRI=":description"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty abbreviatedIRI=":emailAddress"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty abbreviatedIRI=":faxNumber"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty abbreviatedIRI=":firstName"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty abbreviatedIRI=":homepage"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty abbreviatedIRI=":jobTitle"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty abbreviatedIRI=":latitude"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty abbreviatedIRI=":longitude"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty abbreviatedIRI=":name"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty abbreviatedIRI=":phoneNumber"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty abbreviatedIRI=":salutation"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty abbreviatedIRI=":summary"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty abbreviatedIRI=":surname"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty abbreviatedIRI=":website"/>
+    </Declaration>
+    <SubClassOf>
+        <Class abbreviatedIRI=":Alumnus"/>
+        <Class abbreviatedIRI=":Person"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class abbreviatedIRI=":Amenity"/>
+        <Class abbreviatedIRI=":Place"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class abbreviatedIRI=":Book"/>
+        <Class abbreviatedIRI=":Publication"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class abbreviatedIRI=":Building"/>
+        <Class abbreviatedIRI=":Place"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class abbreviatedIRI=":Campus"/>
+        <Class abbreviatedIRI=":Place"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class abbreviatedIRI=":Centre"/>
+        <Class abbreviatedIRI=":Organisation"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class abbreviatedIRI=":Course"/>
+        <Class abbreviatedIRI=":Study"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class abbreviatedIRI=":Department"/>
+        <Class abbreviatedIRI=":Organisation"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class abbreviatedIRI=":Faculty"/>
+        <Class abbreviatedIRI=":Organisation"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class abbreviatedIRI=":Staff"/>
+        <Class abbreviatedIRI=":Person"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class abbreviatedIRI=":Student"/>
+        <Class abbreviatedIRI=":Person"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class abbreviatedIRI=":Subject"/>
+        <Class abbreviatedIRI=":Study"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class abbreviatedIRI=":Thesis"/>
+        <Class abbreviatedIRI=":Publication"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class abbreviatedIRI=":Unit"/>
+        <Class abbreviatedIRI=":Study"/>
+    </SubClassOf>
+    <DisjointClasses>
+        <Class abbreviatedIRI=":Alumnus"/>
+        <Class abbreviatedIRI=":Student"/>
+    </DisjointClasses>
+    <ObjectPropertyDomain>
+        <ObjectProperty abbreviatedIRI=":affiliation"/>
+        <Class abbreviatedIRI=":Staff"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty abbreviatedIRI=":affiliation"/>
+        <Class abbreviatedIRI=":Student"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty abbreviatedIRI=":author"/>
+        <Class abbreviatedIRI=":Publication"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty abbreviatedIRI=":building"/>
+        <Class abbreviatedIRI=":Amenity"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty abbreviatedIRI=":building"/>
+        <Class abbreviatedIRI=":Centre"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty abbreviatedIRI=":building"/>
+        <Class abbreviatedIRI=":Staff"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty abbreviatedIRI=":campus"/>
+        <Class abbreviatedIRI=":Amenity"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty abbreviatedIRI=":campus"/>
+        <Class abbreviatedIRI=":Building"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty abbreviatedIRI=":collaboration"/>
+        <Class abbreviatedIRI=":External"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty abbreviatedIRI=":collaboration"/>
+        <Class abbreviatedIRI=":Staff"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty abbreviatedIRI=":course"/>
+        <Class abbreviatedIRI=":Department"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty abbreviatedIRI=":course"/>
+        <Class abbreviatedIRI=":Faculty"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty abbreviatedIRI=":department"/>
+        <Class abbreviatedIRI=":Study"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty abbreviatedIRI=":director"/>
+        <Class abbreviatedIRI=":Organisation"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty abbreviatedIRI=":expert"/>
+        <Class abbreviatedIRI=":Organisation"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty abbreviatedIRI=":expert"/>
+        <Class abbreviatedIRI=":Research"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty abbreviatedIRI=":expert"/>
+        <Class abbreviatedIRI=":Service"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty abbreviatedIRI=":faculty"/>
+        <Class abbreviatedIRI=":Study"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty abbreviatedIRI=":grantee"/>
+        <Class abbreviatedIRI=":Grant"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty abbreviatedIRI=":infrastructure"/>
+        <Class abbreviatedIRI=":Infrastructure"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty abbreviatedIRI=":infrastructure"/>
+        <Class abbreviatedIRI=":Organisation"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty abbreviatedIRI=":infrastructure"/>
+        <Class abbreviatedIRI=":Service"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty abbreviatedIRI=":mention"/>
+        <Class abbreviatedIRI=":News"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty abbreviatedIRI=":partner"/>
+        <Class abbreviatedIRI=":Organisation"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty abbreviatedIRI=":partner"/>
+        <Class abbreviatedIRI=":Research"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty abbreviatedIRI=":research"/>
+        <Class abbreviatedIRI=":Organisation"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty abbreviatedIRI=":research"/>
+        <Class abbreviatedIRI=":Research"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty abbreviatedIRI=":service"/>
+        <Class abbreviatedIRI=":Organisation"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty abbreviatedIRI=":service"/>
+        <Class abbreviatedIRI=":Service"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty abbreviatedIRI=":supervisor"/>
+        <Class abbreviatedIRI=":Thesis"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty abbreviatedIRI=":unit"/>
+        <Class abbreviatedIRI=":Course"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty abbreviatedIRI=":unit"/>
+        <Class abbreviatedIRI=":Department"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty abbreviatedIRI=":unit"/>
+        <Class abbreviatedIRI=":Faculty"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyRange>
+        <ObjectProperty abbreviatedIRI=":affiliation"/>
+        <Class abbreviatedIRI=":Organisation"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty abbreviatedIRI=":author"/>
+        <Class abbreviatedIRI=":Person"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty abbreviatedIRI=":building"/>
+        <Class abbreviatedIRI=":Building"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty abbreviatedIRI=":campus"/>
+        <Class abbreviatedIRI=":Campus"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty abbreviatedIRI=":collaboration"/>
+        <Class abbreviatedIRI=":Collaboration"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty abbreviatedIRI=":course"/>
+        <Class abbreviatedIRI=":Course"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty abbreviatedIRI=":department"/>
+        <Class abbreviatedIRI=":Department"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty abbreviatedIRI=":director"/>
+        <Class abbreviatedIRI=":Staff"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty abbreviatedIRI=":expert"/>
+        <Class abbreviatedIRI=":Staff"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty abbreviatedIRI=":expert"/>
+        <Class abbreviatedIRI=":Student"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty abbreviatedIRI=":faculty"/>
+        <Class abbreviatedIRI=":Faculty"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty abbreviatedIRI=":grantee"/>
+        <Class abbreviatedIRI=":Staff"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty abbreviatedIRI=":infrastructure"/>
+        <Class abbreviatedIRI=":Infrastructure"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty abbreviatedIRI=":mention"/>
+        <Class abbreviatedIRI="owl:Thing"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty abbreviatedIRI=":partner"/>
+        <Class abbreviatedIRI=":External"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty abbreviatedIRI=":research"/>
+        <Class abbreviatedIRI=":Research"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty abbreviatedIRI=":service"/>
+        <Class abbreviatedIRI=":Service"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty abbreviatedIRI=":supervisor"/>
+        <Class abbreviatedIRI=":Staff"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty abbreviatedIRI=":unit"/>
+        <Class abbreviatedIRI=":Unit"/>
+    </ObjectPropertyRange>
+    <DataPropertyDomain>
+        <DataProperty abbreviatedIRI=":address"/>
+        <Class abbreviatedIRI=":Centre"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty abbreviatedIRI=":emailAddress"/>
+        <Class abbreviatedIRI=":Organisation"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty abbreviatedIRI=":emailAddress"/>
+        <Class abbreviatedIRI=":Person"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty abbreviatedIRI=":faxNumber"/>
+        <Class abbreviatedIRI=":Organisation"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty abbreviatedIRI=":faxNumber"/>
+        <Class abbreviatedIRI=":Person"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty abbreviatedIRI=":firstName"/>
+        <Class abbreviatedIRI=":Person"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty abbreviatedIRI=":jobTitle"/>
+        <Class abbreviatedIRI=":Person"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty abbreviatedIRI=":latitude"/>
+        <Class abbreviatedIRI=":Place"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty abbreviatedIRI=":longitude"/>
+        <Class abbreviatedIRI=":Place"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty abbreviatedIRI=":phoneNumber"/>
+        <Class abbreviatedIRI=":Organisation"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty abbreviatedIRI=":phoneNumber"/>
+        <Class abbreviatedIRI=":Person"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty abbreviatedIRI=":salutation"/>
+        <Class abbreviatedIRI=":Person"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty abbreviatedIRI=":surname"/>
+        <Class abbreviatedIRI=":Person"/>
+    </DataPropertyDomain>
+    <DataPropertyRange>
+        <DataProperty abbreviatedIRI=":address"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty abbreviatedIRI=":emailAddress"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty abbreviatedIRI=":faxNumber"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty abbreviatedIRI=":firstName"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty abbreviatedIRI=":jobTitle"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty abbreviatedIRI=":latitude"/>
+        <Datatype abbreviatedIRI="xsd:double"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty abbreviatedIRI=":longitude"/>
+        <Datatype abbreviatedIRI="xsd:double"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty abbreviatedIRI=":phoneNumber"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty abbreviatedIRI=":salutation"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty abbreviatedIRI=":surname"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+</Ontology>
+
+
+
+<!-- Generated by the OWL API (version 4.5.9.2019-02-01T07:24:44Z) https://github.com/owlcs/owlapi -->
+
