@@ -114,17 +114,17 @@ class PersonBuilder(Builder):
             # Establish associations
             if 'associations' in person:
                 # TODO: Improve the accuracy
-                # doc = nlp(person['associations'])
-                # for ent in doc.ents:
-                #     if ent.label_ == 'ORG':
-                #         org = self._make_entity(uri=ent.text,
-                #                                 typ='Organisation',
-                #                                 name=ent.text,
-                #                                 homepage=None,
-                #                                 summary='')
-                #         self._add_entity(org)
-                #         person['association'].append({'@id': org['@id']})
-                # person['associationStr'] = person['associations']
+                doc = nlp(person['associations'])
+                for ent in doc.ents:
+                    if ent.label_ == 'ORG':
+                        org = self._make_entity(uri=ent.text,
+                                                typ='Organisation',
+                                                name=ent.text,
+                                                homepage=None,
+                                                summary='')
+                        self._add_entity(org)
+                        person['association'].append({'@id': org['@id']})
+                person['associationStr'] = person['associations']
                 del person['associations']
 
             # If there are theses
