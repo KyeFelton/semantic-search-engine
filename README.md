@@ -4,4 +4,4 @@ usydKnowledge is a Python program designed to extract and model information abou
 
 Before starting the program, a valid instance of Stardog's [Enterprise Knowledge Graph](https://www.stardog.com/) platform must be running and configured in config.py. 
 
-Want to know more? Check out my [presentation](https://youtu.be/qn7f9XQjohc), or go to [usydSearch](https://github.com/KyeFelton/usydknowledge) to see how to search the knowledge graph.
+Want to know more? Check out my [presentation](https://youtu.be/qn7f9XQjohc), or go to [usydSearch](https://github.com/KyeFelton/usydsearch) to see how to search the knowledge graph.
